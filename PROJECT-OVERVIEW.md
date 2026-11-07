@@ -48,7 +48,7 @@ Clistory/
 │   ├── TODO.md                        # 当前待办
 │   └── completed/                     # 已完成记录
 │       ├── execution-plan.md          # 分阶段执行计划（已归档）
-│       └── phase-01 ~ phase-09、phase-11  # 开发阶段完成记录
+│       └── phase-01 ~ phase-11  # 开发阶段完成记录
 │
 ├── build/                             # 构建产物（git 忽略）
 │

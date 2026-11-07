@@ -58,7 +58,7 @@ macOS 原生历史剪贴板管理软件（英文名 **Clistory**，中文名 **�
 │   ├── TODO.md
 │   └── completed/
 │       ├── execution-plan.md        # 分阶段执行计划（已归档）
-│       └── phase-01 ~ phase-09、phase-11  # 阶段完成记录
+│       └── phase-01 ~ phase-11  # 阶段完成记录
 └── Clistory/                        # Xcode 项目
     ├── Clistory.xcodeproj/
     └── Clistory/

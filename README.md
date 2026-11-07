@@ -38,6 +38,29 @@ Clistory（中文名「历史粘贴板」）是一款 macOS 原生剪贴板历�
 
 ## 安装
 
+### 使用 Homebrew（推荐）
+
+通过 [Homebrew Tap](https://github.com/qingke04/homebrew-tap) 安装：
+
+```bash
+brew install --cask qingke04/tap/clistory
+```
+
+Homebrew 6 及以上会自动 tap 该仓库，并自动信任 `clistory` 这一个 cask（tap trust 机制）；旧版本 Homebrew 直接安装即可。
+
+升级与卸载：
+
+```bash
+# 升级
+brew upgrade --cask qingke04/tap/clistory
+
+# 卸载（保留历史记录）
+brew uninstall --cask qingke04/tap/clistory
+
+# 卸载并删除历史记录
+brew uninstall --zap --cask qingke04/tap/clistory
+```
+
 ### 下载 DMG
 
 从 [Releases](https://github.com/qingke04/clipboard-history/releases/latest) 下载最新安装包：
@@ -45,6 +68,8 @@ Clistory（中文名「历史粘贴板」）是一款 macOS 原生剪贴板历�
 1. 下载 `Clistory-1.1.dmg` 并双击挂载。
 2. 将 `Clistory.app` 拖入「应用程序」文件夹（中文系统下在访达中显示为「历史粘贴板」）。
 3. 首次启动时，由于发布包使用 ad-hoc 签名且未经过 Apple 公证，Gatekeeper 可能提示无法验证开发者。请在「访达」中右键点击应用并选择「打开」，或前往「系统设置 → 隐私与安全性」点击「仍要打开」；放行一次后即可正常启动。
+
+> Homebrew 安装的版本同样会在首次启动时遇到该 Gatekeeper 提示（Homebrew 会给下载的 app 打上 quarantine 标记），处理方式与上面第 3 步相同；也可以在终端执行 `xattr -dr com.apple.quarantine "/Applications/Clistory.app"` 放行。
 
 可选：校验安装包完整性。
 

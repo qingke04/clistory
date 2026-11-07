@@ -3,7 +3,7 @@
 > 最后更新：2026-11-08
 > 当前版本：1.1（Build 2）
 
-## 当前状态：1.1 已发布到 GitHub（tag `v1.1` + Release + `Clistory-1.1.dmg`，含英文版 README）；待安装验收
+## 当前状态：1.1 已发布到 GitHub（tag `v1.1` + Release + `Clistory-1.1.dmg`，含英文版 README）；Homebrew Tap 与 `clistory` cask 已重建并实测；待安装验收
 
 ### 1.1 语言设置 + 重命名
 
@@ -16,6 +16,8 @@
 - [x] 重启提示框：「立即重启」（默认选中，回车触发）与「稍后重启」；实际生效语言无变化时只保存设置、不弹窗
 - [x] 文档同步：README / PROJECT-OVERVIEW / CLAUDE.md / docs/01~03 / dev-logs
 - [x] 新增英文版 README `README_EN.md`（简介 *Clip Once. Paste Anytime.*），中英文 README 互链
+- [x] 按 1.1 重建 Homebrew Tap（cask 名 `clistory`）以及主仓库 README 说明；本机 tap / 安装 / 卸载 / 升级链路实测通过（详见 `phase-10`）
+- [ ] 后续发版时同步更新 `clistory` cask 的 `version` 与 `sha256`（DMG 保持 `Clistory-<version>.dmg`，tag 保持 `v<version>`）
 - [x] 构建验证：`xcodebuild` Release 通用构建通过（arm64 + x86_64，Xcode 27.2）；中文/英文启动与「即时切换」冒烟测试通过（详见 `phase-11`）
 - [x] 打包 DMG：`build/Clistory-1.1.dmg`（2.5 MB，`hdiutil verify` 校验通过）
 - [ ] 安装 DMG 验收（应用名本地化、语言切换、重启提示、无变化不弹窗）
@@ -49,6 +51,7 @@
 | 1.1 安装包 | `build/Clistory-1.1.dmg`（2.5 MB） |
 | 1.0.0 安装包（历史） | `build/历史粘贴板-1.0.0.dmg`（2.5 MB） |
 | 发布地址 | <https://github.com/qingke04/clipboard-history/releases/tag/v1.1>（最新 Release） |
+| Homebrew | Tap <https://github.com/qingke04/homebrew-tap>，命令 `brew install --cask qingke04/tap/clistory` |
 | 当前版本 | 1.1（Build 2）（GitHub 已发布） |
 | 架构 | universal（arm64 + x86_64） |
 | 签名 | ad-hoc（无开发者证书） |

@@ -38,6 +38,29 @@
 
 ## Installation
 
+### Homebrew (recommended)
+
+Install from the [Homebrew Tap](https://github.com/qingke04/homebrew-tap):
+
+```bash
+brew install --cask qingke04/tap/clistory
+```
+
+Homebrew 6 and later automatically taps the repository and trusts only the `clistory` cask (tap trust mechanism); older Homebrew versions can install it directly.
+
+Upgrade and uninstall:
+
+```bash
+# Upgrade
+brew upgrade --cask qingke04/tap/clistory
+
+# Uninstall (keep history)
+brew uninstall --cask qingke04/tap/clistory
+
+# Uninstall and remove history
+brew uninstall --zap --cask qingke04/tap/clistory
+```
+
 ### Download the DMG
 
 Download the latest installer from [Releases](https://github.com/qingke04/clipboard-history/releases/latest):
@@ -45,6 +68,8 @@ Download the latest installer from [Releases](https://github.com/qingke04/clipbo
 1. Download `Clistory-1.1.dmg` and double-click to mount it.
 2. Drag `Clistory.app` into the Applications folder (on a Chinese system it appears as 「历史粘贴板」 in Finder).
 3. On first launch, because release builds are ad-hoc signed and not notarized by Apple, Gatekeeper may warn that the developer cannot be verified. Right-click the app in Finder and choose Open, or go to System Settings → Privacy & Security and click Open Anyway. After allowing it once, the app launches normally.
+
+> Versions installed via Homebrew also hit this Gatekeeper warning on first launch (Homebrew adds the quarantine attribute to downloaded apps). Handle it the same way as step 3 above, or run `xattr -dr com.apple.quarantine "/Applications/Clistory.app"` in Terminal.
 
 Optionally verify the integrity of the installer:
 
