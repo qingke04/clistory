@@ -15,6 +15,7 @@
 - 公开仓库：<https://github.com/qingke04/clipboard-history>
 - 推送 `main` 分支（初始提交 + 本次发布文件）
 - Release `v1.0.0`：上传 `build/历史粘贴板-1.0.0.dmg`
+  - Release 附件名：`ClipboardHistory-1.0.0.dmg`（GitHub 会剥离中文文件名，改用 ASCII 名称上传）
   - SHA-256：`26c4263fab6b0824f783a4fda27c3eda8f5eb437364bf6d055ce88765f0c1ca0`
   - ad-hoc 签名、未公证，Release 说明中已提示首次打开需手动放行
 

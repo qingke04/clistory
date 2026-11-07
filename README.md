@@ -37,14 +37,14 @@
 
 从 [Releases](https://github.com/qingke04/clipboard-history/releases/latest) 下载最新安装包：
 
-1. 下载 `历史粘贴板-1.0.0.dmg` 并双击挂载。
+1. 下载 `ClipboardHistory-1.0.0.dmg` 并双击挂载（应用名为「历史粘贴板」）。
 2. 将「历史粘贴板」拖入「应用程序」文件夹。
 3. 首次启动时，由于 v1.0.0 使用 ad-hoc 签名且未经过 Apple 公证，Gatekeeper 可能提示无法验证开发者。请在「访达」中右键点击应用并选择「打开」，或前往「系统设置 → 隐私与安全性」点击「仍要打开」；放行一次后即可正常启动。
 
 可选：校验安装包完整性。
 
 ```bash
-shasum -a 256 历史粘贴板-1.0.0.dmg
+shasum -a 256 ClipboardHistory-1.0.0.dmg
 # 26c4263fab6b0824f783a4fda27c3eda8f5eb437364bf6d055ce88765f0c1ca0
 ```
 
