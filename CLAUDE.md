@@ -41,6 +41,8 @@ macOS 原生历史剪贴板管理软件。记录文字和文件路径的复制�
 ```
 .
 ├── CLAUDE.md
+├── README.md                       # 项目介绍、安装、使用、构建与许可证
+├── LICENSE                         # MIT
 ├── PROJECT-OVERVIEW.md
 ├── docs/
 │   ├── 01-requirements.md
@@ -50,7 +52,7 @@ macOS 原生历史剪贴板管理软件。记录文字和文件路径的复制�
 │   ├── TODO.md
 │   └── completed/
 │       ├── execution-plan.md        # 分阶段执行计划（已归档）
-│       └── phase-01 ~ phase-08      # 阶段完成记录
+│       └── phase-01 ~ phase-09      # 阶段完成记录
 └── ClipboardManager/                # Xcode 项目
     ├── ClipboardManager.xcodeproj/
     └── ClipboardManager/
