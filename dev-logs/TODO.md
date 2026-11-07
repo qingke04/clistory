@@ -23,7 +23,7 @@
 - [ ] 安装 DMG 验收（应用名本地化、语言切换、重启提示、无变化不弹窗）
 - [x] GitHub 提交并推送 `main`（提交 `8e3c2a0`）
 - [x] 创建 Release v1.1（tag `v1.1`），上传 `Clistory-1.1.dmg`，Release 说明含「添加英语」「项目名称改成 Clistory」两项更新日志
-  - Release: <https://github.com/qingke04/clipboard-history/releases/tag/v1.1>
+  - Release: <https://github.com/qingke04/clistory/releases/tag/v1.1>
   - 已下载回验：上传 DMG 的 SHA-256 与本地一致
 
 ## 历史记录（1.0.0）
@@ -41,7 +41,7 @@
 ### GitHub 发布
 
 - [x] 仓库整理：新增 `README.md`（安装/使用/隐私/构建/文档索引/已知限制）与 `LICENSE`（MIT）
-- [x] 新建公开仓库 <https://github.com/qingke04/clipboard-history>，推送 `main`
+- [x] 新建公开仓库 <https://github.com/qingke04/clistory>，推送 `main`
 - [x] 创建 Release v1.0.0，上传 `build/历史粘贴板-1.0.0.dmg`
 
 ## 构建产物
@@ -50,7 +50,7 @@
 |------|----|
 | 1.1 安装包 | `build/Clistory-1.1.dmg`（2.5 MB） |
 | 1.0.0 安装包（历史） | `build/历史粘贴板-1.0.0.dmg`（2.5 MB） |
-| 发布地址 | <https://github.com/qingke04/clipboard-history/releases/tag/v1.1>（最新 Release） |
+| 发布地址 | <https://github.com/qingke04/clistory/releases/tag/v1.1>（最新 Release） |
 | Homebrew | Tap <https://github.com/qingke04/homebrew-tap>，命令 `brew install --cask qingke04/tap/clistory` |
 | 当前版本 | 1.1（Build 2）（GitHub 已发布） |
 | 架构 | universal（arm64 + x86_64） |

@@ -15,7 +15,7 @@
 - `Casks/clistory.rb`：cask 定义
   - cask 名：`clistory`（安装命令 `brew install --cask qingke04/tap/clistory`）
   - 版本 `1.1`，SHA-256 `e93a10f899de0e0b1ce01cf72016fe0ea4da6e4385cbee6674a6cd0d88e3cb07`
-  - 下载地址：`https://github.com/qingke04/clipboard-history/releases/download/v#{version}/Clistory-#{version}.dmg`
+  - 下载地址：`https://github.com/qingke04/clistory/releases/download/v#{version}/Clistory-#{version}.dmg`
   - `app "Clistory.app"`、`uninstall quit: "com.clipboardmanager.app"`、`zap trash:`、`livecheck :github_latest`、`depends_on macos: :sonoma`
   - `caveats`：说明 ad-hoc 签名未公证时的首次启动放行方式
 - `README.md`：安装 / 更新 / 卸载、首次启动说明、维护者发版流程

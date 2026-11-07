@@ -116,7 +116,7 @@
 ## 影响与注意事项
 
 - **数据不迁移**：Bundle ID `com.clipboardmanager.app` 与用户数据目录 `~/Library/Application Support/ClipboardManager/` 均未改变，1.0.0 的历史记录可直接沿用
-- **GitHub 已提交并发布**：提交 `8e3c2a0` 已推送 `main`，创建 tag `v1.1` 与 Release「Clistory v1.1」（<https://github.com/qingke04/clipboard-history/releases/tag/v1.1>）；仓库名仍为 `clipboard-history`，Git 历史保留
+- **GitHub 已提交并发布**：提交 `8e3c2a0` 已推送 `main`，创建 tag `v1.1` 与 Release「Clistory v1.1」（<https://github.com/qingke04/clistory/releases/tag/v1.1>）；仓库名仍为 `clipboard-history`，Git 历史保留
 - **系统级文案需重启**：语言设置只对应用内文案即时生效，应用菜单名、系统「设置…」菜单等由 `AppleLanguages` 覆盖在下次启动时生效；实际生效语言无变化时不弹窗
 - **未完成项**：DMG 安装到「应用程序」的人工验收
 - 新增语言时：在 `Resources/<lang>.lproj/` 增加同名 `.strings` 表，并同步工程 `knownRegions`、InfoPlist 本地化与 `LanguageManager` 的语言解析规则

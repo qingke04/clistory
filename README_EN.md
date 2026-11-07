@@ -8,7 +8,7 @@
 
 [English](README_EN.md) | [简体中文](README.md)
 
-![macOS 14+](https://img.shields.io/badge/macOS-14%2B-blue?logo=apple&logoColor=white) ![Swift 5.9+](https://img.shields.io/badge/Swift-5.9%2B-orange?logo=swift&logoColor=white) [![License: MIT](https://img.shields.io/badge/License-MIT-green)](LICENSE) [![GitHub release](https://img.shields.io/github/v/release/qingke04/clipboard-history?label=release&logo=github)](https://github.com/qingke04/clipboard-history/releases/latest)
+![macOS 14+](https://img.shields.io/badge/macOS-14%2B-blue?logo=apple&logoColor=white) ![Swift 5.9+](https://img.shields.io/badge/Swift-5.9%2B-orange?logo=swift&logoColor=white) [![License: MIT](https://img.shields.io/badge/License-MIT-green)](LICENSE) [![GitHub release](https://img.shields.io/github/v/release/qingke04/clistory?label=release&logo=github)](https://github.com/qingke04/clistory/releases/latest)
 
 **Clip Once. Paste Anytime.** Clistory is a native macOS clipboard history manager that automatically records copied text and file paths, with search, pinning, paste-back and automatic cleanup. It lives in the menu bar and can also open a standalone window for full management. The interface supports Follow System, Simplified Chinese and English. Current version: **1.1 (Build 2)**.
 
@@ -63,7 +63,7 @@ brew uninstall --zap --cask qingke04/tap/clistory
 
 ### Download the DMG
 
-Download the latest installer from [Releases](https://github.com/qingke04/clipboard-history/releases/latest):
+Download the latest installer from [Releases](https://github.com/qingke04/clistory/releases/latest):
 
 1. Download `Clistory-1.1.dmg` and double-click to mount it.
 2. Drag `Clistory.app` into the Applications folder (on a Chinese system it appears as 「历史粘贴板」 in Finder).

@@ -12,7 +12,7 @@
 - `dev-logs/TODO.md`：新增「GitHub 发布」清单与下载地址
 
 ### GitHub
-- 公开仓库：<https://github.com/qingke04/clipboard-history>
+- 公开仓库：<https://github.com/qingke04/clistory>
 - 推送 `main` 分支（初始提交 + 本次发布文件）
 - Release `v1.0.0`：上传 `build/历史粘贴板-1.0.0.dmg`
   - Release 附件名：`ClipboardHistory-1.0.0.dmg`（GitHub 会剥离中文文件名，改用 ASCII 名称上传）
