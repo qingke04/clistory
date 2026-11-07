@@ -78,6 +78,16 @@ shasum -a 256 Clistory-1.1.dmg
 # Compare the output with the SHA-256 value published in the corresponding Release notes
 ```
 
+### Upgrading from 1.0.0
+
+Starting with 1.1, the English app name is Clistory and the bundle file name changed from `历史粘贴板.app` to `Clistory.app`. After upgrading, both versions may coexist in the Applications folder. Please follow these steps:
+
+1. Install the new version and launch `Clistory.app` once.
+2. Open the Applications folder and manually delete the old 「历史粘贴板.app」.
+3. Open Settings → Launch in the new version and re-enable Launch at Login (turn it off and on again so it points to the new version).
+
+> Both versions share the same Bundle ID (`com.clipboardmanager.app`) and data directory, so your history is preserved and no migration is needed.
+
 ## Usage
 
 ### Menu bar panel
