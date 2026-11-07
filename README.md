@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="ClipboardManager/ClipboardManager/AppIcon.icon/Assets/image.png" width="128" height="128" alt="历史粘贴板应用图标">
+  <img src="docs/images/app-icon.png" width="128" height="128" alt="历史粘贴板应用图标">
 </p>
 
 # 历史粘贴板
