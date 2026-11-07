@@ -88,18 +88,19 @@ struct ClipboardItem: Codable, Identifiable, Equatable {
 
         switch interval {
         case ..<60:
-            return "刚刚"
+            return L("common.time.justNow")
         case ..<3600:
             let minutes = Int(interval / 60)
-            return "\(minutes)分钟前"
+            return String(format: L("common.time.minutesAgo"), minutes)
         case ..<86400:
             let hours = Int(interval / 3600)
-            return "\(hours)小时前"
+            return String(format: L("common.time.hoursAgo"), hours)
         case ..<604800:
             let days = Int(interval / 86400)
-            return "\(days)天前"
+            return String(format: L("common.time.daysAgo"), days)
         default:
             let formatter = DateFormatter()
+            formatter.locale = LanguageManager.shared.locale
             formatter.dateFormat = "MM-dd HH:mm"
             return formatter.string(from: timestamp)
         }
@@ -118,22 +119,22 @@ struct ClipboardItem: Codable, Identifiable, Equatable {
         case .image:
             // 旧版图片记录兼容显示
             if let name = originalImageName, !name.isEmpty {
-                return "[图片] \(name)"
+                return "\(L("common.preview.image")) \(name)"
             }
             if let size = imageFileSize {
-                return "[图片] \(Self.formatFileSize(size))"
+                return "\(L("common.preview.image")) \(Self.formatFileSize(size))"
             }
-            return "[图片]"
+            return L("common.preview.image")
         case .file:
             // 文件记录预览
             guard let names = fileNames, !names.isEmpty else {
-                return "[文件]"
+                return L("common.preview.file")
             }
             let firstName = names[0]
             if names.count == 1 {
                 return firstName
             } else {
-                return "\(firstName) 等\(names.count)个文件"
+                return String(format: L("common.preview.multipleFiles"), names.count, firstName)
             }
         }
     }

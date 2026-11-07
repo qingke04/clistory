@@ -38,7 +38,7 @@ struct ClipboardItemCard: View {
                     }
                     .buttonStyle(.plain)
                     .frame(width: 20, height: 20)
-                    .help(item.isPinned ? "取消置顶" : "置顶")
+                    .help(item.isPinned ? L("components.card.unpin") : L("components.card.pin"))
 
                     Button {
                         ClipboardActions.delete(item)
@@ -49,7 +49,7 @@ struct ClipboardItemCard: View {
                     }
                     .buttonStyle(.plain)
                     .frame(width: 20, height: 20)
-                    .help("删除")
+                    .help(L("components.card.delete"))
                 }
             }
 
@@ -79,12 +79,15 @@ struct ClipboardItemCard: View {
         .onTapGesture(perform: handleTap)
         .padding(.horizontal, 12)
         .padding(.vertical, 2)
-        .alert("文件已被移动或删除", isPresented: $showFileMissingAlert) {
-            Button("确定", role: .cancel) {
+        .alert(Text(L("components.card.fileMissing.title")), isPresented: $showFileMissingAlert) {
+            Button(role: .cancel) {
                 ClipboardActions.delete(item)
+            } label: {
+                Text(L("components.card.ok"))
             }
         } message: {
-            Text("无法找到以下文件：\n\(missingFileNames.joined(separator: "\n"))")
+            Text(String(format: L("components.card.fileMissing.message"),
+                        missingFileNames.joined(separator: "\n")))
         }
     }
 

@@ -1,0 +1,4 @@
+/* App — en（应用级文案） */
+
+/* 应用显示名（与 InfoPlist.strings 保持一致） */
+"app.name" = "Clistory";

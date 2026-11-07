@@ -1,0 +1,6 @@
+/* Panel — zh-Hans */
+
+"panel.pinned" = "已置顶";
+"panel.count" = "共 %d 条记录";
+"panel.openMain" = "打开主界面";
+"panel.quit" = "退出应用";

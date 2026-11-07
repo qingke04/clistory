@@ -1,0 +1,12 @@
+/* Common — zh-Hans（核心层共用文案） */
+
+/* 内容预览 */
+"common.preview.image" = "[图片]";
+"common.preview.file" = "[文件]";
+"common.preview.multipleFiles" = "共 %d 个文件：%@";
+
+/* 相对时间 */
+"common.time.justNow" = "刚刚";
+"common.time.minutesAgo" = "%d分钟前";
+"common.time.hoursAgo" = "%d小时前";
+"common.time.daysAgo" = "%d天前";

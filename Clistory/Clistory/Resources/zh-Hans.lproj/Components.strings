@@ -1,0 +1,14 @@
+/* Components — zh-Hans */
+
+"components.search.placeholder" = "搜索复制历史...";
+"components.search.clear" = "清空搜索";
+"components.empty.noMatch.title" = "未找到匹配内容";
+"components.empty.noMatch.description" = "试试其他关键词";
+"components.empty.empty.title" = "暂无复制记录";
+"components.empty.empty.description" = "复制文字或文件后会自动出现在这里";
+"components.card.pin" = "置顶";
+"components.card.unpin" = "取消置顶";
+"components.card.delete" = "删除";
+"components.card.fileMissing.title" = "文件已被移动或删除";
+"components.card.fileMissing.message" = "无法找到以下文件：\n%@";
+"components.card.ok" = "确定";

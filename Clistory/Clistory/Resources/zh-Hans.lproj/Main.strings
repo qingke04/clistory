@@ -1,0 +1,4 @@
+/* Main — zh-Hans */
+
+"main.count" = "共 %d 条记录";
+"main.copyHint" = "点击卡片可复制到剪贴板";

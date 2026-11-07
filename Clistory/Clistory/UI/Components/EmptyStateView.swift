@@ -7,14 +7,17 @@ struct EmptyStateView: View {
 
     var body: some View {
         ContentUnavailableView {
-            Label(
-                isSearching ? "未找到匹配内容" : "暂无复制记录",
-                systemImage: isSearching ? "magnifyingglass" : "tray"
-            )
+            Label {
+                Text(isSearching
+                     ? L("components.empty.noMatch.title")
+                     : L("components.empty.empty.title"))
+            } icon: {
+                Image(systemName: isSearching ? "magnifyingglass" : "tray")
+            }
         } description: {
             Text(isSearching
-                 ? "试试其他关键词"
-                 : "复制文字或文件后会自动出现在这里")
+                 ? L("components.empty.noMatch.description")
+                 : L("components.empty.empty.description"))
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }

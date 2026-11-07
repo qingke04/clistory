@@ -1,4 +1,5 @@
 import SwiftUI
+import AppKit
 import ServiceManagement
 import Carbon
 
@@ -42,7 +43,7 @@ private final class HotkeyRecorder {
 }
 
 /// 应用设置 —— Form 标准布局
-/// 存储时长支持「无限制」选项
+/// 存储时长支持「无限制」选项；顶部提供语言设置（跟随系统 / 简体中文 / English）
 struct SettingsView: View {
     // MARK: - 设置项
 
@@ -61,31 +62,20 @@ struct SettingsView: View {
     /// 快捷键展示（HotkeyManager 为 @Observable，变更后自动刷新）
     private let hotkeyManager = HotkeyManager.shared
 
+    /// 语言设置（@Observable，切换后界面即时刷新）
+    private let languageManager = LanguageManager.shared
+
     @State private var recorder = HotkeyRecorder()
 
-    /// 可选保留天数：0 = 无限制（排在最右）
-    private let retentionOptions: [(days: Int, label: String)] = [
-        (1, "1 天"),
-        (5, "5 天"),
-        (7, "7 天"),
-        (30, "30 天"),
-        (0, "无限制")
-    ]
-
-    /// 可选存储条数上限
-    private let maxCountOptions: [(count: Int, label: String)] = [
-        (10, "10 条"), (20, "20 条"), (50, "50 条"),
-        (100, "100 条"), (200, "200 条"), (0, "无上限")
-    ]
-
     private var appVersion: String {
-        Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0.0"
+        Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.1"
     }
 
     // MARK: - 主体
 
     var body: some View {
         Form {
+            languageSection
             retentionSection
             maxCountSection
             hotkeySection
@@ -93,29 +83,81 @@ struct SettingsView: View {
             aboutSection
         }
         .formStyle(.grouped)
-        .frame(minWidth: 420, minHeight: 480)
+        .frame(minWidth: 420, minHeight: 540)
+    }
+
+    // MARK: - 语言
+
+    private var languageSection: some View {
+        Section {
+            Picker(selection: languageBinding) {
+                ForEach(AppLanguage.allCases) { language in
+                    Text(language.displayName).tag(language)
+                }
+            } label: {
+                Text(L("settings.language.picker"))
+            }
+            .pickerStyle(.menu)
+        } header: {
+            Label {
+                Text(L("settings.language.section"))
+            } icon: {
+                Image(systemName: "globe")
+            }
+        } footer: {
+            Text(L("settings.language.footer"))
+        }
+    }
+
+    /// 语言选择绑定：切换后若实际语言发生变化，弹出重启提示
+    private var languageBinding: Binding<AppLanguage> {
+        Binding(
+            get: { languageManager.setting },
+            set: { newValue in
+                if languageManager.setLanguage(newValue) {
+                    presentRestartPrompt()
+                }
+            }
+        )
     }
 
     // MARK: - 存储时长（含「无限制」）
 
     private var retentionSection: some View {
         Section {
-            Picker("保留时长", selection: $retentionDays) {
+            Picker(selection: $retentionDays) {
                 ForEach(retentionOptions, id: \.days) { option in
                     Text(option.label).tag(option.days)
                 }
+            } label: {
+                Text(L("settings.retention.picker"))
             }
             .pickerStyle(.segmented)
         } header: {
-            Label("存储时长", systemImage: "clock")
+            Label {
+                Text(L("settings.retention.section"))
+            } icon: {
+                Image(systemName: "clock")
+            }
         } footer: {
             Text(retentionFooterText)
         }
     }
 
+    /// 可选保留天数：0 = 无限制（排在最右）
+    private var retentionOptions: [(days: Int, label: String)] {
+        [
+            (1, L("settings.retention.day1")),
+            (5, L("settings.retention.day5")),
+            (7, L("settings.retention.day7")),
+            (30, L("settings.retention.day30")),
+            (0, L("settings.retention.unlimited"))
+        ]
+    }
+
     private var retentionFooterText: String {
         guard retentionDays > 0 else {
-            return "不根据时间删除历史记录。置顶规则与条数上限仍然生效。"
+            return L("settings.retention.footer.unlimited")
         }
 
         let cutoff = Calendar.current.date(
@@ -125,27 +167,43 @@ struct SettingsView: View {
         ) ?? Date()
 
         let formatter = DateFormatter()
+        formatter.locale = languageManager.locale
         formatter.dateFormat = "MM-dd HH:mm"
-        return "自动清理：\(formatter.string(from: cutoff)) 之前的非置顶记录将被清理（置顶项不清理）"
+        return String(format: L("settings.retention.footer.auto"), formatter.string(from: cutoff))
     }
 
     // MARK: - 存储条数
 
     private var maxCountSection: some View {
         Section {
-            Picker("条数上限", selection: $maxItemCount) {
+            Picker(selection: $maxItemCount) {
                 ForEach(maxCountOptions, id: \.count) { option in
                     Text(option.label).tag(option.count)
                 }
+            } label: {
+                Text(L("settings.maxCount.picker"))
             }
             .pickerStyle(.segmented)
         } header: {
-            Label("存储条数", systemImage: "tray.full")
+            Label {
+                Text(L("settings.maxCount.section"))
+            } icon: {
+                Image(systemName: "tray.full")
+            }
         } footer: {
-            Text(maxItemCount > 0
-                 ? "超出 \(maxItemCount) 条时自动清理最旧的非置顶记录；与存储时长可同时生效。"
-                 : "不限制存储条数；与存储时长可同时生效。")
+            if maxItemCount > 0 {
+                Text(String(format: L("settings.maxCount.footer.limited"), maxItemCount))
+            } else {
+                Text(L("settings.maxCount.footer.unlimited"))
+            }
         }
+    }
+
+    /// 可选存储条数上限
+    private var maxCountOptions: [(count: Int, label: String)] {
+        [10, 20, 50, 100, 200].map { count in
+            (count, String(format: L("settings.maxCount.option"), count))
+        } + [(0, L("settings.maxCount.unlimited"))]
     }
 
     // MARK: - 快捷键
@@ -153,7 +211,7 @@ struct SettingsView: View {
     private var hotkeySection: some View {
         Section {
             HStack(spacing: 12) {
-                Text(isRecordingHotkey ? "按下新快捷键..." : hotkeyManager.currentHotkey.displayString)
+                Text(isRecordingHotkey ? L("settings.hotkey.recording") : hotkeyManager.currentHotkey.displayString)
                     .font(.system(.title3, design: .monospaced))
                     .padding(.horizontal, 16)
                     .padding(.vertical, 8)
@@ -164,7 +222,7 @@ struct SettingsView: View {
                                   : Color.primary.opacity(0.08))
                     )
 
-                Button(isRecordingHotkey ? "取消" : "录制快捷键") {
+                Button(isRecordingHotkey ? L("settings.hotkey.cancel") : L("settings.hotkey.record")) {
                     if isRecordingHotkey {
                         stopRecording()
                     } else {
@@ -173,7 +231,7 @@ struct SettingsView: View {
                 }
                 .controlSize(.small)
 
-                Button("恢复默认") {
+                Button(L("settings.hotkey.reset")) {
                     HotkeyManager.shared.resetToDefault()
                     isRecordingHotkey = false
                 }
@@ -181,9 +239,13 @@ struct SettingsView: View {
                 .controlSize(.small)
             }
         } header: {
-            Label("快捷键", systemImage: "command")
+            Label {
+                Text(L("settings.hotkey.section"))
+            } icon: {
+                Image(systemName: "command")
+            }
         } footer: {
-            Text("设置全局快捷键以快速打开历史面板")
+            Text(L("settings.hotkey.footer"))
         }
     }
 
@@ -193,8 +255,8 @@ struct SettingsView: View {
         Section {
             Toggle(isOn: $launchAtLogin) {
                 VStack(alignment: .leading, spacing: 2) {
-                    Text("开机自动启动")
-                    Text("登录系统后自动在菜单栏中运行")
+                    Text(L("settings.startup.toggle"))
+                    Text(L("settings.startup.subtitle"))
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
@@ -203,7 +265,11 @@ struct SettingsView: View {
                 toggleLaunchAtLogin(newValue)
             }
         } header: {
-            Label("启动", systemImage: "power.circle")
+            Label {
+                Text(L("settings.startup.section"))
+            } icon: {
+                Image(systemName: "power.circle")
+            }
         }
     }
 
@@ -211,24 +277,34 @@ struct SettingsView: View {
 
     private var aboutSection: some View {
         Section {
-            LabeledContent("应用") {
+            LabeledContent {
                 HStack(spacing: 8) {
                     Image(systemName: "clipboard")
                         .foregroundStyle(.tint)
-                    Text("历史粘贴板")
+                    Text(L("app.name"))
                 }
+            } label: {
+                Text(L("settings.about.app"))
             }
-            LabeledContent("版本") {
+            LabeledContent {
                 Text(appVersion)
                     .foregroundStyle(.secondary)
+            } label: {
+                Text(L("settings.about.version"))
             }
-            LabeledContent("简介") {
-                Text("一款简洁的 macOS 剪贴板管理工具")
+            LabeledContent {
+                Text(L("settings.about.descriptionValue"))
                     .font(.caption)
                     .foregroundStyle(.secondary)
+            } label: {
+                Text(L("settings.about.description"))
             }
         } header: {
-            Label("关于", systemImage: "info.circle")
+            Label {
+                Text(L("settings.about.section"))
+            } icon: {
+                Image(systemName: "info.circle")
+            }
         }
     }
 
@@ -247,6 +323,33 @@ struct SettingsView: View {
     private func stopRecording() {
         recorder.stopRecording()
         isRecordingHotkey = false
+    }
+
+    // MARK: - 重启提示
+
+    /// 语言切换后弹出重启提示：默认按钮「立即重启」，Esc / 次按钮为「稍后重启」
+    /// 「稍后重启」时当前界面已即时切换，系统级文案等待下次启动更新
+    private func presentRestartPrompt() {
+        let alert = NSAlert()
+        alert.messageText = L("settings.restart.title")
+        alert.informativeText = L("settings.restart.message")
+        alert.alertStyle = .informational
+        alert.addButton(withTitle: L("settings.restart.now"))
+        alert.addButton(withTitle: L("settings.restart.later"))
+        alert.buttons.last?.keyEquivalent = "\u{1b}"
+        alert.buttons.first?.keyEquivalent = "\r"
+
+        let handleResponse: (NSApplication.ModalResponse) -> Void = { response in
+            if response == .alertFirstButtonReturn {
+                AppDelegate.shared?.relaunchApp()
+            }
+        }
+
+        if let window = NSApp.keyWindow {
+            alert.beginSheetModal(for: window, completionHandler: handleResponse)
+        } else {
+            handleResponse(alert.runModal())
+        }
     }
 
     // MARK: - 自启动控制

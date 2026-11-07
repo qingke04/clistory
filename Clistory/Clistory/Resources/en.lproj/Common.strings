@@ -1,0 +1,12 @@
+/* Common — en（核心层共用文案） */
+
+/* 内容预览 */
+"common.preview.image" = "[Image]";
+"common.preview.file" = "[File]";
+"common.preview.multipleFiles" = "%d files including %@";
+
+/* 相对时间 */
+"common.time.justNow" = "Just now";
+"common.time.minutesAgo" = "%dm ago";
+"common.time.hoursAgo" = "%dh ago";
+"common.time.daysAgo" = "%dd ago";

@@ -34,17 +34,17 @@ struct MainContentView: View {
             Divider()
             statusBar
         }
-        .navigationTitle("历史粘贴板")
+        .navigationTitle(Text(L("app.name")))
     }
 
     private var headerBar: some View {
         HStack {
             Image(systemName: "clipboard")
                 .foregroundStyle(.tint)
-            Text("历史粘贴板")
+            Text(L("app.name"))
                 .font(.headline)
             Spacer()
-            Text("共 \(storage.items.count) 条记录")
+            Text(String(format: L("main.count"), storage.items.count))
                 .font(.caption)
                 .foregroundStyle(.secondary)
         }
@@ -54,7 +54,7 @@ struct MainContentView: View {
 
     private var statusBar: some View {
         HStack {
-            Text("点击卡片可复制到剪贴板")
+            Text(L("main.copyHint"))
                 .font(.caption)
                 .foregroundStyle(.secondary)
             Spacer()

@@ -14,6 +14,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private var mainWindow: NSWindow?
     /// 窗口生命周期观察（用于动态切换 Dock 身份）
     private var windowObservers: [NSObjectProtocol] = []
+    /// 语言切换观察（即时切换后刷新窗口标题）
+    private var languageObserver: NSObjectProtocol?
 
     /// 关闭最后一个窗口时不退出（菜单栏常驻）
     func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
@@ -43,13 +45,14 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         performStartupCleanup()
         scheduleCleanupTimer()
         observeWindowLifecycle()
+        observeLanguageChanges()
 
         // 启动时显示主窗口（accessory 下 Window Scene 不会自动前置）
         DispatchQueue.main.async {
             self.openMainWindow()
         }
 
-        print("🚀 历史粘贴板已启动")
+        print("🚀 Clistory 已启动")
     }
 
     func applicationWillTerminate(_ notification: Notification) {
@@ -57,6 +60,31 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         HotkeyManager.shared.unregister()
         windowObservers.forEach(NotificationCenter.default.removeObserver(_:))
         windowObservers.removeAll()
+        if let languageObserver {
+            NotificationCenter.default.removeObserver(languageObserver)
+        }
+    }
+
+    // MARK: - 语言即时切换
+
+    /// 语言在设置页即时切换后，同步刷新窗口标题等 AppKit 侧文案
+    private func observeLanguageChanges() {
+        languageObserver = NotificationCenter.default.addObserver(
+            forName: LanguageManager.didChangeNotification,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            self?.refreshWindowTitles()
+        }
+    }
+
+    /// 刷新主窗口标题（SwiftUI/AppKit 两种承载方式都覆盖）
+    private func refreshWindowTitles() {
+        let title = L("app.name")
+        for window in NSApp.windows where window.identifier?.rawValue == "main" {
+            window.title = title
+        }
+        mainWindow?.title = title
     }
 
     // MARK: - 动态激活策略
@@ -103,7 +131,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         // 主窗口（SwiftUI Window id / 标题）与设置窗口
         if window.identifier?.rawValue == "main" { return true }
         let title = window.title
-        return title == "历史粘贴板" || title.contains("设置") || title.contains("Settings")
+        if title == L("app.name") || title == "Clistory" || title == "历史粘贴板" { return true }
+        return title.contains("设置") || title.contains("Settings")
     }
 
     private func hasPresentationWindow() -> Bool {
@@ -119,7 +148,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         }
     }
 
-    /// 升为普通应用：Dock 图标 + 菜单栏显示「历史粘贴板」
+    /// 升为普通应用：Dock 图标 + 菜单栏显示「Clistory / 历史粘贴板」
     private func adoptRegularPresentation(activate: Bool) {
         let needsChange = NSApp.activationPolicy() != .regular
         if needsChange {
@@ -146,7 +175,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private func registerDefaultSettings() {
         UserDefaults.standard.register(defaults: [
             "retentionDays": 1,
-            "maxItemCount": 0
+            "maxItemCount": 0,
+            "appLanguage": AppLanguage.system.rawValue
         ])
     }
 
@@ -234,7 +264,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
         // 1. SwiftUI Window Scene 创建的窗口
         if let swiftUIWindow = NSApp.windows.first(where: {
-            $0.identifier?.rawValue == "main" || $0.title == "历史粘贴板"
+            $0.identifier?.rawValue == "main"
+                || $0.title == L("app.name")
+                || $0.title == "Clistory"
+                || $0.title == "历史粘贴板"
         }), swiftUIWindow.windowNumber > 0 {
             swiftUIWindow.makeKeyAndOrderFront(nil)
             return
@@ -253,13 +286,32 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             backing: .buffered,
             defer: false
         )
-        window.title = "历史粘贴板"
+        window.title = L("app.name")
         window.contentView = NSHostingView(rootView: MainContentView())
         window.center()
         window.setFrameAutosaveName("MainWindow")
         window.isReleasedWhenClosed = false
         mainWindow = window
         window.makeKeyAndOrderFront(nil)
+    }
+
+    // MARK: - 重启应用
+
+    /// 重启当前应用（语言切换后「立即重启」使用）
+    /// AppleLanguages 已在切换语言时写入，新实例启动后系统级本地化随之生效
+    func relaunchApp() {
+        let bundlePath = Bundle.main.bundlePath
+        let task = Process()
+        task.executableURL = URL(fileURLWithPath: "/bin/sh")
+        task.arguments = ["-c", "sleep 0.5; /usr/bin/open -n \"\(bundlePath)\""]
+        do {
+            try task.run()
+        } catch {
+            print("❌ 重启应用失败: \(error.localizedDescription)")
+            NSSound.beep()
+            return
+        }
+        NSApp.terminate(nil)
     }
 }
 

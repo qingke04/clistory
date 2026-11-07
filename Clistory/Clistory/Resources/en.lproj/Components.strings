@@ -1,0 +1,14 @@
+/* Components — en */
+
+"components.search.placeholder" = "Search clipboard history…";
+"components.search.clear" = "Clear search";
+"components.empty.noMatch.title" = "No Matches";
+"components.empty.noMatch.description" = "Try a different keyword";
+"components.empty.empty.title" = "No Clipboard History Yet";
+"components.empty.empty.description" = "Copy text or files and they'll appear here";
+"components.card.pin" = "Pin";
+"components.card.unpin" = "Unpin";
+"components.card.delete" = "Delete";
+"components.card.fileMissing.title" = "File Moved or Deleted";
+"components.card.fileMissing.message" = "The following files could not be found:\n%@";
+"components.card.ok" = "OK";

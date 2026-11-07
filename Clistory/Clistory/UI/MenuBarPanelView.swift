@@ -66,7 +66,7 @@ struct MenuBarPanelView: View {
             Image(systemName: "pin.fill")
                 .font(.caption2)
                 .foregroundStyle(.tint)
-            Text("已置顶")
+            Text(L("panel.pinned"))
                 .font(.caption.weight(.medium))
                 .foregroundStyle(.secondary)
             Spacer()
@@ -79,7 +79,7 @@ struct MenuBarPanelView: View {
 
     private var bottomToolbar: some View {
         HStack {
-            Text("共 \(storage.items.count) 条记录")
+            Text(String(format: L("panel.count"), storage.items.count))
                 .font(.caption)
                 .foregroundStyle(.secondary)
 
@@ -91,7 +91,7 @@ struct MenuBarPanelView: View {
                 Image(systemName: "macwindow")
             }
             .buttonStyle(.plain)
-            .help("打开主界面")
+            .help(L("panel.openMain"))
 
             Button {
                 NSApplication.shared.terminate(nil)
@@ -99,7 +99,7 @@ struct MenuBarPanelView: View {
                 Image(systemName: "power")
             }
             .buttonStyle(.plain)
-            .help("退出应用")
+            .help(L("panel.quit"))
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 8)

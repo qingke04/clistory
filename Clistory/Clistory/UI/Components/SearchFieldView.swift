@@ -3,7 +3,7 @@ import SwiftUI
 /// 搜索输入框 —— 胶囊形，左侧放大镜，支持一键清空
 struct SearchFieldView: View {
     @Binding var text: String
-    var placeholder: String = "搜索复制历史..."
+    var placeholder: String = L("components.search.placeholder")
 
     @FocusState private var isFocused: Bool
 
@@ -26,7 +26,7 @@ struct SearchFieldView: View {
                         .foregroundStyle(.secondary)
                 }
                 .buttonStyle(.plain)
-                .help("清空搜索")
+                .help(L("components.search.clear"))
             }
         }
         .padding(.horizontal, 10)

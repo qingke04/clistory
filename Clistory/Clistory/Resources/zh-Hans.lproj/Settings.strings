@@ -1,0 +1,52 @@
+/* Settings — zh-Hans（设置页文案） */
+
+/* 语言 */
+"settings.language.section" = "语言";
+"settings.language.picker" = "界面语言";
+"settings.language.system" = "跟随系统";
+"settings.language.footer" = "默认跟随系统。更改语言后需要重启应用才能完全生效。";
+
+/* 语言切换后的重启提示 */
+"settings.restart.title" = "需要重启应用";
+"settings.restart.message" = "语言已切换。立即重启以完全应用新语言；稍后重启则当前界面立即切换，系统级文字将在下次启动后更新。";
+"settings.restart.now" = "立即重启";
+"settings.restart.later" = "稍后重启";
+
+/* 存储时长 */
+"settings.retention.section" = "存储时长";
+"settings.retention.picker" = "保留时长";
+"settings.retention.day1" = "1 天";
+"settings.retention.day5" = "5 天";
+"settings.retention.day7" = "7 天";
+"settings.retention.day30" = "30 天";
+"settings.retention.unlimited" = "无限制";
+"settings.retention.footer.unlimited" = "不根据时间删除历史记录。置顶规则与条数上限仍然生效。";
+"settings.retention.footer.auto" = "自动清理：%@ 之前的非置顶记录将被清理（置顶项不清理）";
+
+/* 存储条数 */
+"settings.maxCount.section" = "存储条数";
+"settings.maxCount.picker" = "条数上限";
+"settings.maxCount.option" = "%d 条";
+"settings.maxCount.unlimited" = "无上限";
+"settings.maxCount.footer.limited" = "超出 %d 条时自动清理最旧的非置顶记录；与存储时长可同时生效。";
+"settings.maxCount.footer.unlimited" = "不限制存储条数；与存储时长可同时生效。";
+
+/* 快捷键 */
+"settings.hotkey.section" = "快捷键";
+"settings.hotkey.recording" = "按下新快捷键...";
+"settings.hotkey.record" = "录制快捷键";
+"settings.hotkey.cancel" = "取消";
+"settings.hotkey.reset" = "恢复默认";
+"settings.hotkey.footer" = "设置全局快捷键以快速打开历史面板";
+
+/* 开机自启动 */
+"settings.startup.section" = "启动";
+"settings.startup.toggle" = "开机自动启动";
+"settings.startup.subtitle" = "登录系统后自动在菜单栏中运行";
+
+/* 关于 */
+"settings.about.section" = "关于";
+"settings.about.app" = "应用";
+"settings.about.version" = "版本";
+"settings.about.description" = "简介";
+"settings.about.descriptionValue" = "一款简洁的 macOS 剪贴板管理工具";

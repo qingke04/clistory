@@ -1,18 +1,19 @@
-# 历史粘贴板 — 项目全景文档
+# Clistory（历史粘贴板） — 项目全景文档
 
-> 同步于 2026-11-07，基于 v1.0.0 当前源代码与项目文档整理
+> 同步于 2026-11-07，基于 v1.1 当前源代码与项目文档整理
 > **注意**：本文档为阅读参考，不修改任何代码逻辑
 
 ---
 
 ## 一、产品概述
 
-**历史粘贴板** 是一款 macOS 原生剪贴板管理工具，自动记录用户复制的文字和文件路径，支持搜索、置顶、删除、自动清理等功能。
+**Clistory**（中文名「历史粘贴板」）是一款 macOS 原生剪贴板管理工具，自动记录用户复制的文字和文件路径，支持搜索、置顶、删除、自动清理等功能。
 
-- **版本**：1.0.0 (Build 1)
+- **版本**：1.1（Build 2）
 - **最低系统**：macOS 14 Sonoma
 - **语言**：Swift 5.9+
 - **UI 框架**：SwiftUI + AppKit 混合
+- **界面语言**：跟随系统（Follow System，默认）/ 简体中文 / English
 - **第三方依赖**：无（全部系统框架）
 
 ### 记录策略
@@ -30,27 +31,31 @@
 ## 二、项目目录结构
 
 ```
-lishijianqieban/
+Clistory/
 ├── CLAUDE.md                          # 项目总览 + 工作约定
 ├── PROJECT-OVERVIEW.md                # 本文档
+├── README.md                          # 中文版：项目介绍、安装、使用、构建
+├── README_EN.md                       # 英文版 README（Clip Once. Paste Anytime.）
+├── LICENSE                            # MIT
 │
 ├── docs/                              # 当前产品与技术规范
 │   ├── 01-requirements.md             # 产品需求文档
 │   ├── 02-technical-spec.md           # 技术规范
-│   └── 03-design-spec.md              # UI 设计规范
+│   ├── 03-design-spec.md              # UI 设计规范
+│   └── images/app-icon.png            # 文档引用图标
 │
 ├── dev-logs/                          # 开发日志
 │   ├── TODO.md                        # 当前待办
 │   └── completed/                     # 已完成记录
 │       ├── execution-plan.md          # 分阶段执行计划（已归档）
-│       └── phase-01 ~ phase-08        # 8 个开发阶段
+│       └── phase-01 ~ phase-09、phase-11  # 开发阶段完成记录
 │
 ├── build/                             # 构建产物（git 忽略）
 │
-└── ClipboardManager/                  # Xcode 项目根目录
-    ├── ClipboardManager.xcodeproj/    # Xcode 项目配置
-    └── ClipboardManager/              # 源代码目录
-        ├── ClipboardManagerApp.swift  # App 入口（@main）
+└── Clistory/                          # Xcode 项目根目录
+    ├── Clistory.xcodeproj/            # Xcode 项目配置
+    └── Clistory/                      # 源代码目录
+        ├── ClistoryApp.swift          # App 入口（@main）
         ├── Info.plist                 # 应用配置
         ├── Assets.xcassets/           # 资源目录
         ├── AppIcon.icon/              # 应用图标源文件
@@ -60,10 +65,21 @@ lishijianqieban/
         │   ├── ClipboardItem.swift    # 数据模型
         │   ├── ClipboardMonitor.swift # 剪贴板监听器
         │   ├── HotkeyManager.swift    # 全局快捷键管理
+        │   ├── LanguageManager.swift  # 语言设置、取词与 AppleLanguages 覆盖
         │   └── StorageManager.swift   # 持久化存储管理
         ├── Services/
         │   ├── ClipboardActions.swift # 复制/置顶/删除/搜索过滤
         │   └── AppWindows.swift       # 窗口导航
+        ├── Resources/                 # 本地化资源
+        │   ├── en.lproj/              # 英文 .strings 表
+        │   │   ├── App.strings
+        │   │   ├── Settings.strings
+        │   │   ├── Common.strings
+        │   │   ├── Main.strings
+        │   │   ├── Panel.strings
+        │   │   ├── Components.strings
+        │   │   └── InfoPlist.strings
+        │   └── zh-Hans.lproj/         # 简体中文 .strings 表（文件名同上）
         └── UI/
             ├── MainContentView.swift  # 主窗口内容视图
             ├── MenuBarPanelView.swift # 菜单栏弹出面板视图
@@ -81,7 +97,7 @@ lishijianqieban/
 ### 3.1 场景架构（SwiftUI Scene）
 
 ```
-ClipboardManagerApp (@main)
+ClistoryApp (@main)
 ├── MenuBarExtra(.window) → MenuBarPanelView      # 菜单栏图标点击面板
 ├── Window(id: "main")    → MainContentView       # 主窗口（680×480）
 └── Settings             → SettingsView           # 系统标准设置窗口（⌘,）
@@ -97,11 +113,14 @@ ClipboardManagerApp (@main)
 ├─────────────────────────────────────────────────┤
 │               Core 层 + Services 层               │
 │  ClipboardItem │ ClipboardMonitor                │
-│  StorageManager│ HotkeyManager                    │
+│  StorageManager│ HotkeyManager │ LanguageManager │
 │  ClipboardActions │ AppWindows                    │
 ├─────────────────────────────────────────────────┤
+│              本地化资源（Resources）               │
+│  en.lproj / zh-Hans.lproj（.strings × 6 + InfoPlist）│
+├─────────────────────────────────────────────────┤
 │                  App 层（生命周期）                │
-│  ClipboardManagerApp (@main)                     │
+│  ClistoryApp (@main)                             │
 │  AppDelegate (AppKit 桥接)                       │
 └─────────────────────────────────────────────────┘
 ```
@@ -115,6 +134,7 @@ ClipboardManagerApp (@main)
 | `StorageManager.shared` | 数据读写、持久化、过期清理、旧数据迁移 |
 | `ClipboardMonitor.shared` | 系统剪贴板轮询检测 |
 | `HotkeyManager.shared` | 全局快捷键注册与响应 |
+| `LanguageManager.shared` | 语言设置持久化、即时取词、AppleLanguages 覆盖 |
 | `AppDelegate.shared` | 菜单栏、弹出面板、主窗口管理（弱引用） |
 
 ### 3.4 动态激活策略
@@ -130,7 +150,7 @@ ClipboardManagerApp (@main)
 
 ### 4.1 App 入口层
 
-#### `ClipboardManagerApp.swift` — App 入口
+#### `ClistoryApp.swift` — App 入口
 - `@main` 声明应用入口，`@NSApplicationDelegateAdaptor` 桥接 `AppDelegate`
 - 三个 Scene：`MenuBarExtra`（面板）、`Window(id: "main")`（主窗口 680×480）、`Settings`（设置）
 - 不自定义 `.appSettings` 命令：Settings 场景自动生成唯一的「设置…」（⌘,）
@@ -258,6 +278,29 @@ struct HotkeyCombo: Codable, Equatable {
 
 ---
 
+#### `LanguageManager.swift` — 语言管理器
+
+**职责**：语言设置持久化、应用内即时取词、系统级语言覆盖（供下次启动完全生效）。
+
+**核心类型**：
+- `AppLanguage` — 设置页的三个选项：`.system`（跟随系统）/ `.simplifiedChinese` / `.english`，持久化到 UserDefaults 键 `appLanguage`
+- `SupportedLanguage` — 实际生效语言：`.english`（`en.lproj`）/ `.simplifiedChinese`（`zh-Hans.lproj`）
+- `LanguageManager.shared` — `@Observable` 单例，持有 `setting`（持久化设置）与 `resolved`（实际生效语言）
+
+**取词机制**：
+- 全局函数 `L(_:)`，键名格式为「表名小写.键」，例如 `settings.language.title`
+- 按表名懒加载对应 `.lproj` Bundle 取词；当前语言缺失时回退英文，仍缺失则返回键名
+- 表名：`app` / `settings` / `common` / `main` / `panel` / `components`，对应 `Resources/<lang>.lproj/<Table>.strings`
+- `locale` — 当前语言对应 Locale（`zh_Hans_CN` / `en_US`），供日期等格式化使用
+
+**生效规则**：
+- 选择「简体中文」/「English」：立即使用对应语言；「跟随系统」时读取系统全局 `AppleLanguages`（`CFPreferencesCopyAppValue` + `kCFPreferencesAnyApplication`），未知语言回退英文（与 `CFBundleDevelopmentRegion = en` 一致）
+- `setLanguage(_:)` 保存设置并立即生效，返回实际生效语言是否变化；仅在变化时发送 `LanguageManagerDidChange` 通知，设置页据此弹出重启提示
+- `applyLaunchLanguageOverride(for:)` 把 `AppleLanguages` 写入应用偏好域（`["zh-Hans"]` / `["en"]`），「跟随系统」时移除该覆盖；下次启动时系统级文案（应用菜单名、系统「设置…」菜单）与 InfoPlist 应用名随之本地化
+- 语言切换后 AppKit 层监听 `LanguageManagerDidChange` 刷新窗口标题等界面元素（应用菜单名等系统级文案仍由下次启动生效）
+
+---
+
 ### 4.3 Services 服务层
 
 #### `ClipboardActions.swift` — 剪贴板操作服务
@@ -342,13 +385,38 @@ struct HotkeyCombo: Codable, Equatable {
 
 | Section | 控件 |
 |---------|------|
+| 语言 | 弹出式菜单：跟随系统（默认）/ 简体中文 / English（位于表单顶部） |
 | 存储时长 | 分段选择：**1 天 / 5 天 / 7 天 / 30 天 / 无限制** + 说明 Footer |
 | 存储条数 | 分段选择：10 / 20 / 50 / 100 / 200 / 无上限 |
 | 快捷键 | 等宽字体展示 + 录制快捷键 + 恢复默认 |
 | 启动 | 开机自动启动 Toggle（SMAppService） |
 | 关于 | 应用 / 版本（读取 `CFBundleShortVersionString`）/ 简介 |
 
+**语言切换流程**：选择语言后调用 `LanguageManager.setLanguage(_:)`；若实际生效语言变化，弹出 `NSAlert` 重启提示框（「立即重启」为默认按钮，回车触发；「稍后重启」为次按钮，Esc 触发）；选「立即重启」重启应用完全生效，选「稍后重启」则应用内界面立即切换、系统级文案留待下次启动；若实际生效语言未变化（如系统已是英文时选 English），只保存设置、不弹窗。
+
 **快捷键录制**：使用 `NSEvent.addLocalMonitorForEvents` 监听键盘事件，将 AppKit 修饰键转换为 Carbon 修饰键格式。
+
+---
+
+### 4.5 本地化资源（`Resources/`）
+
+标准 `.strings` 本地化资源，两个语言目录结构相同：
+
+| 资源 | 用途 |
+|------|------|
+| `Resources/en.lproj/` | 英文界面 |
+| `Resources/zh-Hans.lproj/` | 简体中文界面 |
+| `App.strings` | 应用菜单名、菜单命令等 App 层文案 |
+| `Settings.strings` | 设置页文案 |
+| `Common.strings` | 通用按钮、通用提示（确定/取消等） |
+| `Main.strings` | 主窗口文案 |
+| `Panel.strings` | 菜单栏面板文案 |
+| `Components.strings` | 卡片、搜索框、空状态等组件文案 |
+| `InfoPlist.strings` | `CFBundleName` / `CFBundleDisplayName`：en = Clistory，zh-Hans = 历史粘贴板 |
+
+- 键名规范：`表名小写.键`（如 `settings.language.title`）
+- 构建配置：`developmentRegion = en`、`knownRegions = (en, Base, zh-Hans)`；`CFBundleDevelopmentRegion = en`，未知语言回退英文
+- `LOCALIZATION_PREFERS_STRING_CATALOGS = YES`（工程级构建配置；当前资源仍为 `.strings` 文件）
 
 ---
 
@@ -413,6 +481,25 @@ migrateOldDataIfNeeded()
 └─ 写入标记 legacy_image_migration_completed
 ```
 
+### 5.5 语言切换流程
+
+```
+用户在「设置 → 语言」选择语言
+    ↓
+LanguageManager.setLanguage(newValue)
+    ├─ 保存 setting → UserDefaults["appLanguage"]
+    ├─ 写入 / 移除 AppleLanguages 覆盖（供下次启动系统级本地化）
+    └─ 重新解析 resolved（跟随系统时读取全局 AppleLanguages）
+    ↓
+实际生效语言是否变化？
+    ├─ 否 → 仅保存设置，不弹窗
+    └─ 是 → 发送 LanguageManagerDidChange（应用内界面立即刷新）
+           ↓
+       弹出重启提示框
+           ├─ 立即重启（默认，回车）→ 重启应用，全部文案切换
+           └─ 稍后重启 → 应用内已切换，系统级文案下次启动生效
+```
+
 ---
 
 ## 六、UserDefaults 配置项
@@ -423,6 +510,8 @@ migrateOldDataIfNeeded()
 | `retentionDays` | Int | 存储天数上限（0 = 无限制） | 1 |
 | `maxItemCount` | Int | 存储条数上限（0 = 无上限） | 0 |
 | `hotkey_combo` | Data | 快捷键组合 JSON | Cmd+Shift+V |
+| `appLanguage` | String | 语言设置：`system` / `zh-Hans` / `en` | `system` |
+| `AppleLanguages` | Array | 语言覆盖（写入应用偏好域）；「跟随系统」时移除 | 无 |
 | `legacy_image_migration_completed` | Bool | 旧图片数据迁移标记 | false |
 
 ---
@@ -431,12 +520,13 @@ migrateOldDataIfNeeded()
 
 | Key | 值 | 说明 |
 |-----|-----|------|
-| `CFBundleName` | 历史粘贴板 | 应用名称 |
-| `CFBundleShortVersionString` | `$(MARKETING_VERSION)` → 1.0.0 | 版本号（来源：项目配置） |
-| `CFBundleVersion` | `$(CURRENT_PROJECT_VERSION)` → 1 | Build 号（来源：项目配置） |
+| `CFBundleName` | Clistory / 历史粘贴板 | 应用名称，由 `Resources/<lang>.lproj/InfoPlist.strings` 本地化 |
+| `CFBundleDisplayName` | Clistory / 历史粘贴板 | 显示名称，本地化来源同上 |
+| `CFBundleShortVersionString` | `$(MARKETING_VERSION)` → 1.1 | 版本号（来源：项目配置） |
+| `CFBundleVersion` | `$(CURRENT_PROJECT_VERSION)` → 2 | Build 号（来源：项目配置） |
 | `LSMinimumSystemVersion` | 14.0 | 最低系统版本 |
 | `LSUIElement` | true | 启动为菜单栏应用；运行时按窗口动态切换 `.regular` / `.accessory` |
-| `CFBundleDevelopmentRegion` | zh_CN | 开发区域 |
+| `CFBundleDevelopmentRegion` | en | 开发区域；未知语言回退英文 |
 
 ---
 
@@ -450,6 +540,9 @@ migrateOldDataIfNeeded()
 4. **检测优先级**：文件 → 文字 → 跳过，避免文件被误记为文字
 5. **Carbon 快捷键**：使用成熟的 Carbon Event HotKey API，而非较新的方案
 6. **兼容迁移**：保留旧字段解码能力，启动时一次性清理旧图片数据
+7. **标准 .strings 本地化**：6 张业务表 + `InfoPlist.strings`，通过自建 `LanguageManager` 按 `.lproj` Bundle 取词，实现应用内即时切换
+8. **AppleLanguages 覆盖**：把语言选择写入应用偏好域，让系统级文案与 InfoPlist 应用名在下次启动时本地化；「跟随系统」时移除覆盖
+9. **数据零迁移更名**：Bundle ID 与数据目录保持不变，仅改产品名、工程名与产物名，老数据不丢
 
 ### 8.2 性能考量
 
@@ -470,6 +563,7 @@ migrateOldDataIfNeeded()
 - 截图/剪贴板图片数据不进历史（产品决策）
 - 文件路径可能暴露用户目录结构（暂无隐私过滤，需求明确不做）
 - 全量 JSON 存 UserDefaults，文本历史极大时可考虑换存储后端
+- 语言切换后系统级文案（应用菜单名、系统「设置…」菜单等）需重启应用才完全生效
 
 ---
 
@@ -477,28 +571,39 @@ migrateOldDataIfNeeded()
 
 ### 打开项目
 ```bash
-open ClipboardManager/ClipboardManager.xcodeproj
+open Clistory/Clistory.xcodeproj
 ```
 
 ### 构建运行
-在 Xcode 中按 `Cmd+R`
+在 Xcode 中选择 `Clistory` Scheme 与 `My Mac` 目标，按 `Cmd+R`
+
+### 命令行构建
+```bash
+xcodebuild -project Clistory/Clistory.xcodeproj -scheme Clistory \
+  -configuration Release -derivedDataPath build/DerivedData build
+```
+- 产物：`build/DerivedData/Build/Products/Release/Clistory.app`
+- 归档：`-archivePath build/Clistory.xcarchive`；DMG 建议 `build/Clistory-1.1.dmg`
+- 若 `xcodebuild` 报 requires Xcode：前置 `DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer`
 
 ### 版本号修改位置
-- 唯一来源：`ClipboardManager/ClipboardManager.xcodeproj/project.pbxproj`
-  - `MARKETING_VERSION`（当前 `1.0.0`）
-  - `CURRENT_PROJECT_VERSION`（当前 `1`）
+- 唯一来源：`Clistory/Clistory.xcodeproj/project.pbxproj`
+  - `MARKETING_VERSION`（当前 `1.1`）
+  - `CURRENT_PROJECT_VERSION`（当前 `2`）
 - `Info.plist` 通过 `$(MARKETING_VERSION)` / `$(CURRENT_PROJECT_VERSION)` 自动引用
 
 ### 关键文件速查
 
 | 功能 | 文件 |
 |------|------|
-| App 入口 | `ClipboardManagerApp.swift` |
+| App 入口 | `ClistoryApp.swift` |
 | 生命周期/窗口管理 | `App/AppDelegate.swift` |
 | 数据模型 | `Core/ClipboardItem.swift` |
 | 剪贴板监听 | `Core/ClipboardMonitor.swift` |
 | 存储管理 | `Core/StorageManager.swift` |
 | 快捷键 | `Core/HotkeyManager.swift` |
+| 语言管理 | `Core/LanguageManager.swift` |
+| 本地化资源 | `Resources/en.lproj/`、`Resources/zh-Hans.lproj/` |
 | 复制/置顶/删除/搜索 | `Services/ClipboardActions.swift` |
 | 窗口导航 | `Services/AppWindows.swift` |
 | 主窗口 UI | `UI/MainContentView.swift` |

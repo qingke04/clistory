@@ -1,14 +1,16 @@
 <p align="center">
-  <img src="docs/images/app-icon.png" width="128" height="128" alt="历史粘贴板应用图标">
+  <img src="docs/images/app-icon.png" width="128" height="128" alt="Clistory（历史粘贴板）应用图标">
 </p>
 
-# 历史粘贴板
+# Clistory（历史粘贴板）
 
-*Clipboard History for macOS*
+*Clipboard History for macOS · 英文名 Clistory · 中文名 历史粘贴板*
+
+[简体中文](README.md) | [English](README_EN.md)
 
 ![macOS 14+](https://img.shields.io/badge/macOS-14%2B-blue?logo=apple&logoColor=white) ![Swift 5.9+](https://img.shields.io/badge/Swift-5.9%2B-orange?logo=swift&logoColor=white) [![License: MIT](https://img.shields.io/badge/License-MIT-green)](LICENSE) [![GitHub release](https://img.shields.io/github/v/release/qingke04/clipboard-history?label=release&logo=github)](https://github.com/qingke04/clipboard-history/releases/latest)
 
-历史粘贴板是一款 macOS 原生剪贴板历史管理工具：自动记录复制的文字与文件路径，支持搜索、置顶、回填和自动清理。应用常驻菜单栏，也可打开独立主窗口进行完整管理。当前版本 **1.0.0 (Build 1)**。
+Clistory（中文名「历史粘贴板」）是一款 macOS 原生剪贴板历史管理工具：自动记录复制的文字与文件路径，支持搜索、置顶、回填和自动清理。应用常驻菜单栏，也可打开独立主窗口进行完整管理；界面支持跟随系统（Follow System）、简体中文与 English。当前版本 **1.1（Build 2）**。
 
 ## 功能特性
 
@@ -20,6 +22,7 @@
 - **置顶与删除**：重要记录可置顶；删除只移除历史条目，不会删除源文件。
 - **自动清理**：支持保留时长与条数上限两类规则，条数上限在新增记录时检查，保留时长在启动时及之后每小时检查；置顶记录不参与自动清理。
 - **两种界面**：320 × 480 的菜单栏面板用于快速取用，680 × 480 的主窗口用于完整管理。
+- **界面语言**：设置中可切换「跟随系统（Follow System，默认）」「简体中文」「English」；应用内文案即时切换，系统级文案在重启后完全生效。
 - **全局快捷键**：默认 `⌘⇧V` 唤起面板，可在设置中录制新组合或恢复默认。
 - **开机自启动**：基于 `SMAppService`，登录系统后自动在菜单栏运行。
 - **动态 Dock 策略**：平时为纯菜单栏应用、不占用 Dock；打开主窗口或设置后显示 Dock 图标与菜单栏软件名，全部关闭后自动收回。
@@ -35,17 +38,19 @@
 
 ## 安装
 
+### 下载 DMG
+
 从 [Releases](https://github.com/qingke04/clipboard-history/releases/latest) 下载最新安装包：
 
-1. 下载 `ClipboardHistory-1.0.0.dmg` 并双击挂载（应用名为「历史粘贴板」）。
-2. 将「历史粘贴板」拖入「应用程序」文件夹。
-3. 首次启动时，由于 v1.0.0 使用 ad-hoc 签名且未经过 Apple 公证，Gatekeeper 可能提示无法验证开发者。请在「访达」中右键点击应用并选择「打开」，或前往「系统设置 → 隐私与安全性」点击「仍要打开」；放行一次后即可正常启动。
+1. 下载 `Clistory-1.1.dmg` 并双击挂载。
+2. 将 `Clistory.app` 拖入「应用程序」文件夹（中文系统下在访达中显示为「历史粘贴板」）。
+3. 首次启动时，由于发布包使用 ad-hoc 签名且未经过 Apple 公证，Gatekeeper 可能提示无法验证开发者。请在「访达」中右键点击应用并选择「打开」，或前往「系统设置 → 隐私与安全性」点击「仍要打开」；放行一次后即可正常启动。
 
 可选：校验安装包完整性。
 
 ```bash
-shasum -a 256 ClipboardHistory-1.0.0.dmg
-# 26c4263fab6b0824f783a4fda27c3eda8f5eb437364bf6d055ce88765f0c1ca0
+shasum -a 256 Clistory-1.1.dmg
+# 将输出与对应 Release 说明中公布的 SHA-256 值比对
 ```
 
 ## 使用方法
@@ -65,11 +70,21 @@ shasum -a 256 ClipboardHistory-1.0.0.dmg
 
 | 设置 | 可选值 / 说明 |
 | --- | --- |
+| 语言 | 跟随系统（Follow System，默认）/ 简体中文 / English |
 | 存储时长 | 1 天 / 5 天 / 7 天 / 30 天 / 无限制 |
 | 存储条数 | 10 / 20 / 50 / 100 / 200 条 / 无上限 |
 | 快捷键 | 查看当前组合、录制新快捷键、恢复默认 |
 | 启动 | 开机自动启动开关 |
 | 关于 | 应用名称、版本与简介 |
+
+### 语言设置
+
+在「设置 → 语言」中切换界面语言，选项为「跟随系统（Follow System，默认）」「简体中文」「English」：
+
+- 切换后若实际生效语言发生变化，会弹出重启提示框：
+  - **立即重启**（默认选中，回车触发）：立即重启应用，应用内界面与系统级文案（应用菜单名、系统「设置…」菜单等）全部切换。
+  - **稍后重启**：应用内界面立即切换；系统级文案在下次启动后完全切换。
+- 若切换后实际生效语言没有变化（例如系统已是英文时选择 English），只保存设置，不弹出提示。
 
 ### 自动清理规则
 
@@ -84,6 +99,7 @@ shasum -a 256 ClipboardHistory-1.0.0.dmg
 
 - **记录范围**：仅记录文字内容（富文本会提取为纯文本）与文件/文件夹的路径；不保存文件副本，不记录剪贴板中的图片数据。
 - **存储位置**：历史记录以 JSON 编码保存在本机 UserDefaults 中（Bundle ID `com.clipboardmanager.app`，键 `clipboard_items`），通常对应 `~/Library/Preferences/com.clipboardmanager.app.plist`。
+- **更名与数据不变**：英文名改为 Clistory 不改变 Bundle ID（仍为 `com.clipboardmanager.app`）与用户数据目录（仍为 `~/Library/Application Support/ClipboardManager/`），旧版本历史记录与新版本共用、无需迁移。
 - **旧数据迁移**：早期版本使用的图片目录 `~/Library/Application Support/ClipboardManager/Images/` 会在升级后的首次启动时被清理。
 - **完全离线**：应用不含网络请求代码，无第三方依赖或分析 SDK，不会上传任何数据。
 - **路径提示**：文件记录保存完整的绝对路径，可能暴露用户名与目录结构，本版本不做路径脱敏。
@@ -95,63 +111,67 @@ shasum -a 256 ClipboardHistory-1.0.0.dmg
 ### 使用 Xcode
 
 ```bash
-open ClipboardManager/ClipboardManager.xcodeproj
+open Clistory/Clistory.xcodeproj
 ```
 
-在 Xcode 中选择 `ClipboardManager` Scheme 与 `My Mac` 目标，按 `⌘R` 运行，`⌘B` 构建。
+在 Xcode 中选择 `Clistory` Scheme 与 `My Mac` 目标，按 `⌘R` 运行，`⌘B` 构建。
 
 ### 使用命令行
 
 首次使用命令行前，请先在 Xcode 中打开一次项目以生成 Scheme。以下命令在仓库根目录执行：
 
 ```bash
-# Release 构建（通用二进制，本机 ad-hoc 签名）
+# Release 构建
 xcodebuild \
-  -project ClipboardManager/ClipboardManager.xcodeproj \
-  -scheme ClipboardManager \
+  -project Clistory/Clistory.xcodeproj \
+  -scheme Clistory \
   -configuration Release \
   -derivedDataPath build/DerivedData \
-  ARCHS="arm64 x86_64" \
-  ONLY_ACTIVE_ARCH=NO \
-  CODE_SIGN_IDENTITY="-" \
   build
 ```
 
-构建产物位于 `build/DerivedData/Build/Products/Release/历史粘贴板.app`。
+构建产物位于 `build/DerivedData/Build/Products/Release/Clistory.app`。
+
+如需通用二进制（arm64 + x86_64），在构建命令后追加 `ARCHS="arm64 x86_64" ONLY_ACTIVE_ARCH=NO`。
+
+> 若本机 active developer directory 是 CommandLineTools，`xcodebuild` 会报 “requires Xcode”，可在命令前加 `DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer`。
 
 如需归档分发：
 
 ```bash
 xcodebuild \
-  -project ClipboardManager/ClipboardManager.xcodeproj \
-  -scheme ClipboardManager \
+  -project Clistory/Clistory.xcodeproj \
+  -scheme Clistory \
   -configuration Release \
-  -archivePath build/历史粘贴板.xcarchive \
-  CODE_SIGN_IDENTITY="-" \
+  -archivePath build/Clistory.xcarchive \
   archive
 ```
 
-归档产物位于 `build/历史粘贴板.xcarchive/Products/Applications/历史粘贴板.app`，可继续用于打包 DMG。
+归档产物位于 `build/Clistory.xcarchive/Products/Applications/Clistory.app`，可继续用于打包 DMG，建议产物名为 `build/Clistory-1.1.dmg`。
 
 ## 项目结构
 
 ```text
 .
-├── ClipboardManager/                  # Xcode 工程
-│   ├── ClipboardManager.xcodeproj/
-│   └── ClipboardManager/
-│       ├── ClipboardManagerApp.swift  # App 入口：MenuBarExtra / Window / Settings
+├── Clistory/                          # Xcode 工程
+│   ├── Clistory.xcodeproj/
+│   └── Clistory/
+│       ├── ClistoryApp.swift          # App 入口：MenuBarExtra / Window / Settings
 │       ├── Info.plist
 │       ├── AppIcon.icon/              # 应用图标源文件
 │       ├── Assets.xcassets/
 │       ├── App/                       # AppDelegate 系统集成
-│       ├── Core/                      # 数据模型、监听、存储、快捷键
+│       ├── Core/                      # 数据模型、监听、存储、快捷键、语言管理
 │       ├── Services/                  # 剪贴板操作、窗口导航
+│       ├── Resources/                 # en.lproj / zh-Hans.lproj 本地化字符串
 │       └── UI/                        # 主窗口、菜单栏面板、设置与组件
+├── build/                             # 构建产物（git 忽略）
 ├── docs/                              # 产品、技术、设计文档
 ├── dev-logs/                          # 开发日志与待办
 ├── PROJECT-OVERVIEW.md                # 项目全景
 ├── CLAUDE.md                          # 项目约定与索引
+├── README.md                          # 中文版项目介绍、安装、使用、构建与许可证
+├── README_EN.md                       # 英文版 README（Clip Once. Paste Anytime.）
 └── LICENSE
 ```
 
@@ -165,12 +185,14 @@ xcodebuild \
 | [docs/03-design-spec.md](docs/03-design-spec.md) | 界面布局、组件与交互规范 |
 | [dev-logs/TODO.md](dev-logs/TODO.md) | 当前待办与已知问题 |
 | [dev-logs/completed/](dev-logs/completed/) | 各阶段完成记录 |
+| [README_EN.md](README_EN.md) | English README（英文版项目介绍） |
 | [CLAUDE.md](CLAUDE.md) | 项目约定、目录结构与版本管理 |
 
 ## 已知限制
 
 - **MenuBarExtra 右键菜单**：SwiftUI `MenuBarExtra` 暂不支持自定义右键菜单，因此设置入口位于应用菜单（`⌘,`），退出入口位于面板底部工具栏。
-- **未公证**：v1.0.0 采用 ad-hoc 签名，未使用开发者证书、未经过 Apple 公证，首次打开需要手动放行。
+- **语言切换需重启**：切换语言后应用内文案即时生效，系统级文案（应用菜单名、系统「设置…」菜单等）需重启应用才完全切换。
+- **未公证**：发布包采用 ad-hoc 签名，未使用开发者证书、未经过 Apple 公证，首次打开需要手动放行。
 - **文件记录依赖源文件**：源文件被移动或删除后记录失效，应用会提示并自动删除对应条目。
 - **不记录剪贴板图片数据**：截图等纯图片内容不会进入历史，这是当前版本的产品决策。
 - **无路径隐私过滤**：文件记录保留完整路径，暂不提供脱敏或黑名单。

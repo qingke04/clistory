@@ -1,0 +1,52 @@
+/* Settings — en（设置页文案） */
+
+/* 语言 */
+"settings.language.section" = "Language";
+"settings.language.picker" = "Interface Language";
+"settings.language.system" = "Follow System";
+"settings.language.footer" = "Follows the system language by default. Restart the app for the change to take full effect.";
+
+/* 语言切换后的重启提示 */
+"settings.restart.title" = "Restart Required";
+"settings.restart.message" = "The language has been switched. Restart now to apply it fully; if you restart later, the interface switches immediately and system-level text updates on next launch.";
+"settings.restart.now" = "Restart Now";
+"settings.restart.later" = "Restart Later";
+
+/* 存储时长 */
+"settings.retention.section" = "Storage Duration";
+"settings.retention.picker" = "Retention Period";
+"settings.retention.day1" = "1 day";
+"settings.retention.day5" = "5 days";
+"settings.retention.day7" = "7 days";
+"settings.retention.day30" = "30 days";
+"settings.retention.unlimited" = "Unlimited";
+"settings.retention.footer.unlimited" = "History is never deleted by age. Pinned items and the item limit still apply.";
+"settings.retention.footer.auto" = "Auto-clean: non-pinned items before %@ will be removed (pinned items are kept)";
+
+/* 存储条数 */
+"settings.maxCount.section" = "Item Limit";
+"settings.maxCount.picker" = "Maximum Items";
+"settings.maxCount.option" = "%d items";
+"settings.maxCount.unlimited" = "No Limit";
+"settings.maxCount.footer.limited" = "When more than %d items are stored, the oldest non-pinned items are removed; works together with the storage duration.";
+"settings.maxCount.footer.unlimited" = "No item limit; works together with the storage duration.";
+
+/* 快捷键 */
+"settings.hotkey.section" = "Shortcut";
+"settings.hotkey.recording" = "Press a new shortcut...";
+"settings.hotkey.record" = "Record Shortcut";
+"settings.hotkey.cancel" = "Cancel";
+"settings.hotkey.reset" = "Reset to Default";
+"settings.hotkey.footer" = "Set a global shortcut to quickly open the history panel";
+
+/* 开机自启动 */
+"settings.startup.section" = "Launch";
+"settings.startup.toggle" = "Launch at Login";
+"settings.startup.subtitle" = "Run in the menu bar automatically after you log in";
+
+/* 关于 */
+"settings.about.section" = "About";
+"settings.about.app" = "Application";
+"settings.about.version" = "Version";
+"settings.about.description" = "Description";
+"settings.about.descriptionValue" = "A simple clipboard manager for macOS";
