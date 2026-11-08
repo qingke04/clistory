@@ -1,7 +1,7 @@
 # Phase 12 完成记录 — 旧版本应用自动清理（修复更名后两个 .app 共存）
 
 **完成时间**：2026-11-08
-**状态**：✅ 代码、构建、DMG 与端到端迁移验证完成（待提交/发布）
+**状态**：✅ 完成（代码、构建、端到端迁移验证、GitHub Release v1.1.1 与 Homebrew cask 更新均已落地）
 
 ## 背景
 
@@ -56,11 +56,13 @@ DMG 采用拖拽安装：包文件名不同就不会覆盖，于是从 1.0.x 升
   4. 第二轮额外先直接启动 1.0.0 旧版实例，再启动新版：旧实例被正常退出（进程消失），随后旧包移入废纸篓
   5. 测试残留已从废纸篓删除，`/Applications` 恢复为仅 `Clistory.app`，用户偏好文件未被测试实例写入
 - **DMG**：`build/Clistory-1.1.1.dmg`（2.6 MB），`hdiutil verify` 校验 VALID；挂载后包内版本为 1.1.1（Build 3），含新文案，通用架构；SHA-256 `d98b0c2e341bc4c675a0237c719a9b9ccdad37b9fa5906a8a12a15f226509885`
+- **GitHub 发布**：提交 `ca2bdfc` 推送 `main`；tag `v1.1.1` 与 Release「Clistory v1.1.1」创建成功，说明为「修复更新后新版与旧版共存的问题」；通过 Release 下载回验，DMG 大小 2,710,159 字节、SHA-256 与本地一致
+- **Homebrew**：tap 提交 `0ad608d` 将 `Casks/clistory.rb` 更新为 1.1.1（新 SHA-256），`brew fetch --cask qingke04/tap/clistory` 校验通过
 
 ## 注意事项
 
 - **已安装 1.1 的用户不会自动获得修复**：必须安装 1.1.1 才会执行清理
 - **旧版正在运行时**：实测 macOS 26 上按 Finder 路径启动新版会启动独立实例（同 Bundle ID 也不同路径），清理时退出旧实例后移入废纸篓；若个别系统只激活旧实例，从菜单栏退出旧版后重新启动新版即可
 - **App 管理权限**：macOS 13+ 的 `kTCCServiceSystemPolicyAppBundles` 可能拦截对其它应用的移动操作；失败时弹窗引导到「系统设置 → 隐私与安全性 → App 管理」授权后重试，或手动移入废纸篓
-- **未做**：GitHub 提交/Release、Homebrew `clistory` cask 的 `version`/`sha256` 更新（见 `dev-logs/TODO.md` 待办）
+- **发布状态**：GitHub Release 与 Homebrew cask 已更新；仅剩「安装 DMG 验收」待人工完成（见 `dev-logs/TODO.md`）
 - **数据不变**：Bundle ID 与用户数据目录未改，历史记录不受影响
