@@ -1,6 +1,6 @@
 # 02 — 技术规范
 
-> 本文档描述当前实现（SwiftUI 标准 UI 架构 + 标准 .strings 本地化），适用于 v1.1。
+> 本文档描述当前实现（SwiftUI 标准 UI 架构 + 标准 .strings 本地化），适用于 v1.1.1。
 
 ## 1. 技术选型
 
@@ -62,6 +62,13 @@ struct ClipboardItem: Codable, Identifiable, Equatable {
 - 旧路径：`~/Library/Application Support/ClipboardManager/Images/`
 - 首次启动时由 `migrateOldDataIfNeeded()` 清理旧图片记录与目录
 
+### 旧版本应用清理（1.1.1+）
+- 背景：1.1 起产物名由 `历史粘贴板.app` 改为 `Clistory.app`，Bundle ID 不变；DMG 拖拽安装不会覆盖旧包，升级后「应用程序」中可能新旧并存
+- 检测：`LegacyAppCleaner.findLegacyApps()` 扫描 `/Applications`、`~/Applications` 中文件名为 `历史粘贴板.app` / `ClipboardManager.app` 的包，校验 `CFBundleIdentifier` 与当前应用一致，并排除当前运行的包
+- 移除：`FileManager.trashItem` 移入废纸篓（可恢复，不直接 `rm`）；移除前先终止仍在运行的旧版实例，避免两个实例同时写历史记录
+- 自启动：移除成功后若 `SMAppService.mainApp.status == .enabled`，重新注册登录项使其指向新版本
+- 反馈：成功弹窗提示一次；失败（如 macOS「App 管理」权限拦截）提供「重试 / 在访达中显示 / 稍后」，同一 Build 内失败提示只出现一次
+
 ## 4. 剪贴板监听方案
 
 ```
@@ -95,6 +102,7 @@ NSPasteboard.general.changeCount   // 变化计数器
 | 剪贴板监听 | `Core/ClipboardMonitor.swift` | `@Observable`；系统剪贴板变化检测与读取 |
 | 快捷键 | `Core/HotkeyManager.swift` | `@Observable`；全局快捷键注册 |
 | 语言管理 | `Core/LanguageManager.swift` | 语言设置持久化、即时取词、`AppleLanguages` 覆盖与恢复 |
+| 旧版本清理 | `Services/LegacyAppCleaner.swift` | 启动时检测并移除更名前的旧版本 `.app`（移入废纸篓）、退出旧实例、重新注册登录项 |
 | 系统集成 | `App/AppDelegate.swift` | 服务启动、自动清理调度、快捷键唤起面板、窗口兜底、动态激活策略（主窗口/设置打开时 `.regular` 显示 Dock 图标与软件名，全部关闭后 `.accessory`）、监听语言变化通知刷新窗口标题等界面元素 |
 | 操作服务 | `Services/ClipboardActions.swift` | 复制/置顶/删除/搜索过滤（视图共用） |
 | 窗口导航 | `Services/AppWindows.swift` | 打开主窗口/设置/面板 |
@@ -116,6 +124,7 @@ NSPasteboard.general.changeCount   // 变化计数器
 | `appLanguage` | String | 语言设置：`system`（默认）/ `zh-Hans` / `en` |
 | `AppleLanguages` | Array | 语言覆盖（写入应用偏好域；「跟随系统」时移除） |
 | `legacy_image_migration_completed` | Bool | 旧图片数据迁移标记 |
+| `legacy_app_cleanup_dismissed_version` | String | 已忽略「旧版本清理失败」提示的 Build 号 |
 
 ## 6. 本地化技术方案
 

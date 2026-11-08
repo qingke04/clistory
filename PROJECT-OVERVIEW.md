@@ -9,7 +9,7 @@
 
 **Clistory**（中文名「历史粘贴板」）是一款 macOS 原生剪贴板管理工具，自动记录用户复制的文字和文件路径，支持搜索、置顶、删除、自动清理等功能。
 
-- **版本**：1.1（Build 2）
+- **版本**：1.1.1（Build 3）
 - **最低系统**：macOS 14 Sonoma
 - **语言**：Swift 5.9+
 - **UI 框架**：SwiftUI + AppKit 混合
@@ -114,7 +114,7 @@ ClistoryApp (@main)
 │               Core 层 + Services 层               │
 │  ClipboardItem │ ClipboardMonitor                │
 │  StorageManager│ HotkeyManager │ LanguageManager │
-│  ClipboardActions │ AppWindows                    │
+│  ClipboardActions │ AppWindows │ LegacyAppCleaner  │
 ├─────────────────────────────────────────────────┤
 │              本地化资源（Resources）               │
 │  en.lproj / zh-Hans.lproj（.strings × 6 + InfoPlist）│
@@ -166,6 +166,7 @@ ClistoryApp (@main)
 6. `scheduleCleanupTimer()` — 每小时定时清理
 7. `observeWindowLifecycle()` — 监听窗口生命周期，动态切换激活策略
 8. 异步 `openMainWindow()` — 启动时显示主窗口
+9. 延迟 1 秒后 `checkLegacyAppsAtLaunch()` — 后台检测并清理更名前遗留的旧版本应用（见 5.5）
 
 **生命周期**：
 - `applicationShouldTerminateAfterLastWindowClosed` 返回 `false`（菜单栏常驻）
@@ -315,6 +316,13 @@ struct HotkeyCombo: Codable, Equatable {
 #### `AppWindows.swift` — 窗口导航
 - `openMain()` — 打开主窗口
 - `showPanel()` — 显示快捷面板
+
+#### `LegacyAppCleaner.swift` — 旧版本应用清理
+1.1 起应用英文名由「历史粘贴板」改为「Clistory」而 Bundle ID 不变，DMG 拖拽安装后可能出现新旧两个 `.app` 共存：
+- `findLegacyApps()` — 扫描 `/Applications`、`~/Applications` 中文件名为 `历史粘贴板.app` / `ClipboardManager.app` 的包，校验 Bundle ID 与当前应用一致并排除当前运行的包
+- `terminateRunningApps(at:)` — 让仍在运行的旧版实例正常退出（最多等 2 秒），避免两个实例同时写历史记录
+- `cleanup()` — `FileManager.trashItem` 移入废纸篓（可恢复），成功后重新注册开机自启动登录项
+- 结果由 `AppDelegate` 弹窗反馈：成功提示一次；失败提供「重试 / 在访达中显示 / 稍后」
 
 ---
 
@@ -481,7 +489,24 @@ migrateOldDataIfNeeded()
 └─ 写入标记 legacy_image_migration_completed
 ```
 
-### 5.5 语言切换流程
+### 5.5 旧版本应用清理（1.1.1+，每次启动检测）
+
+```
+启动 → 延迟 1 秒（等主窗口出现）
+    ↓
+LegacyAppCleaner.cleanup()（后台线程）
+    ├─ 扫描 /Applications、~/Applications 中文件名为 历史粘贴板.app / ClipboardManager.app 的包
+    ├─ 校验 CFBundleIdentifier == com.clipboardmanager.app，并排除当前运行的包
+    ├─ 终止仍在运行的旧版实例（避免两个实例同时写历史记录）
+    ├─ FileManager.trashItem → 移入废纸篓（可恢复）
+    └─ 若曾开启开机自启动 → SMAppService 重新注册到新版本
+    ↓
+结果处理（主线程弹窗）
+    ├─ 成功 → 「已清理旧版本应用」提示一次
+    └─ 失败（如 App 管理权限拦截）→ 「重试 / 在访达中显示 / 稍后」；同一 Build 内只提示一次
+```
+
+### 5.6 语言切换流程
 
 ```
 用户在「设置 → 语言」选择语言
@@ -513,6 +538,7 @@ LanguageManager.setLanguage(newValue)
 | `appLanguage` | String | 语言设置：`system` / `zh-Hans` / `en` | `system` |
 | `AppleLanguages` | Array | 语言覆盖（写入应用偏好域）；「跟随系统」时移除 | 无 |
 | `legacy_image_migration_completed` | Bool | 旧图片数据迁移标记 | false |
+| `legacy_app_cleanup_dismissed_version` | String | 已忽略「旧版本清理失败」提示的 Build 号 | 无 |
 
 ---
 
@@ -543,6 +569,7 @@ LanguageManager.setLanguage(newValue)
 7. **标准 .strings 本地化**：6 张业务表 + `InfoPlist.strings`，通过自建 `LanguageManager` 按 `.lproj` Bundle 取词，实现应用内即时切换
 8. **AppleLanguages 覆盖**：把语言选择写入应用偏好域，让系统级文案与 InfoPlist 应用名在下次启动时本地化；「跟随系统」时移除覆盖
 9. **数据零迁移更名**：Bundle ID 与数据目录保持不变，仅改产品名、工程名与产物名，老数据不丢
+10. **更名迁移自动清理**：1.1.1 起启动时检测同 Bundle ID 的旧版 `历史粘贴板.app` 并移入废纸篓，同时退出旧实例、重注册登录项，避免两个 `.app` 长期共存
 
 ### 8.2 性能考量
 
@@ -564,6 +591,7 @@ LanguageManager.setLanguage(newValue)
 - 文件路径可能暴露用户目录结构（暂无隐私过滤，需求明确不做）
 - 全量 JSON 存 UserDefaults，文本历史极大时可考虑换存储后端
 - 语言切换后系统级文案（应用菜单名、系统「设置…」菜单等）需重启应用才完全生效
+- 自动清理若被 macOS「App 管理」权限拦截，需要用户手动授权或手动移入废纸篓（已提供重试/在访达中显示兜底）
 
 ---
 
@@ -583,13 +611,13 @@ xcodebuild -project Clistory/Clistory.xcodeproj -scheme Clistory \
   -configuration Release -derivedDataPath build/DerivedData build
 ```
 - 产物：`build/DerivedData/Build/Products/Release/Clistory.app`
-- 归档：`-archivePath build/Clistory.xcarchive`；DMG 建议 `build/Clistory-1.1.dmg`
+- 归档：`-archivePath build/Clistory.xcarchive`；DMG 建议 `build/Clistory-1.1.1.dmg`
 - 若 `xcodebuild` 报 requires Xcode：前置 `DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer`
 
 ### 版本号修改位置
 - 唯一来源：`Clistory/Clistory.xcodeproj/project.pbxproj`
-  - `MARKETING_VERSION`（当前 `1.1`）
-  - `CURRENT_PROJECT_VERSION`（当前 `2`）
+  - `MARKETING_VERSION`（当前 `1.1.1`）
+  - `CURRENT_PROJECT_VERSION`（当前 `3`）
 - `Info.plist` 通过 `$(MARKETING_VERSION)` / `$(CURRENT_PROJECT_VERSION)` 自动引用
 
 ### 关键文件速查

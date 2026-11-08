@@ -2,3 +2,13 @@
 
 /* 应用显示名（与 InfoPlist.strings 保持一致） */
 "app.name" = "Clistory";
+
+/* 旧版本应用清理（0.x 的「历史粘贴板.app」→ 1.x 的「Clistory.app」更名迁移） */
+"app.legacyApp.removed.title" = "Old Version Removed";
+"app.legacyApp.removed.message" = "To avoid two versions coexisting, the old version “%@” was moved to the Trash. Your clipboard history is not affected.";
+"app.legacyApp.failed.title" = "Couldn’t Remove Old Version";
+"app.legacyApp.failed.message" = "The old version “%@” still exists alongside the new version in the Applications folder. Automatic removal failed, possibly due to macOS privacy protection: allow Clistory under System Settings → Privacy & Security → App Management and click Try Again, or move it to the Trash manually in Finder.";
+"app.legacyApp.retry" = "Try Again";
+"app.legacyApp.reveal" = "Show in Finder";
+"app.legacyApp.later" = "Later";
+"app.legacyApp.ok" = "OK";

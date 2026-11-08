@@ -17,6 +17,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     /// 语言切换观察（即时切换后刷新窗口标题）
     private var languageObserver: NSObjectProtocol?
 
+    /// 旧版本应用清理是否正在执行（防止重复触发）
+    private var isLegacyCleanupRunning = false
+
+    /// 「旧版本清理失败」提示的静默标记（按 Build 版本记录，同一版本内只提示一次）
+    private static let legacyCleanupDismissedVersionKey = "legacy_app_cleanup_dismissed_version"
+
     /// 关闭最后一个窗口时不退出（菜单栏常驻）
     func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
         false
@@ -46,6 +52,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         scheduleCleanupTimer()
         observeWindowLifecycle()
         observeLanguageChanges()
+
+        // 检测更名前遗留的旧版本应用（历史粘贴板.app），等主窗口出现后再清理
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
+            self?.checkLegacyAppsAtLaunch()
+        }
 
         // 启动时显示主窗口（accessory 下 Window Scene 不会自动前置）
         DispatchQueue.main.async {
@@ -85,6 +96,76 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             window.title = title
         }
         mainWindow?.title = title
+    }
+
+    // MARK: - 旧版本应用清理
+
+    /// 启动时检测更名前遗留的旧版本应用（历史粘贴板.app）并清理
+    /// 避免升级后「应用程序」文件夹中同时存在新旧两个 .app
+    private func checkLegacyAppsAtLaunch() {
+        guard !isLegacyCleanupRunning else { return }
+        isLegacyCleanupRunning = true
+        DispatchQueue.global(qos: .utility).async { [weak self] in
+            let result = LegacyAppCleaner.cleanup()
+            DispatchQueue.main.async {
+                self?.isLegacyCleanupRunning = false
+                self?.presentLegacyCleanupResult(result)
+            }
+        }
+    }
+
+    /// 展示旧版本清理结果
+    /// 成功：提示旧版本已移入废纸篓（旧版本已不存在，后续启动不会再触发）
+    /// 失败：提供「重试 / 在访达中显示 / 稍后」，同一版本内失败只提示一次
+    private func presentLegacyCleanupResult(_ result: LegacyAppCleaner.Result) {
+        guard !result.isEmpty else { return }
+
+        if !result.failed.isEmpty {
+            // 同一版本内只提示一次，避免每次启动打扰；用户放开权限后下次启动会静默成功
+            guard !hasDismissedLegacyCleanupAlert else { return }
+
+            let alert = NSAlert()
+            alert.alertStyle = .warning
+            alert.messageText = L("app.legacyApp.failed.title")
+            alert.informativeText = String(
+                format: L("app.legacyApp.failed.message"),
+                result.failed.joined(separator: " / ")
+            )
+            alert.addButton(withTitle: L("app.legacyApp.retry"))
+            alert.addButton(withTitle: L("app.legacyApp.reveal"))
+            alert.addButton(withTitle: L("app.legacyApp.later"))
+            NSApp.activate(ignoringOtherApps: true)
+
+            switch alert.runModal() {
+            case .alertFirstButtonReturn:
+                checkLegacyAppsAtLaunch()
+            case .alertSecondButtonReturn:
+                NSWorkspace.shared.activateFileViewerSelecting(LegacyAppCleaner.findLegacyApps())
+            default:
+                if let version = Bundle.main.infoDictionary?["CFBundleVersion"] as? String {
+                    UserDefaults.standard.set(version, forKey: Self.legacyCleanupDismissedVersionKey)
+                }
+            }
+            return
+        }
+
+        // 清理成功：弹一次提示，告知旧版本已移入废纸篓（可恢复）
+        let alert = NSAlert()
+        alert.alertStyle = .informational
+        alert.messageText = L("app.legacyApp.removed.title")
+        alert.informativeText = String(
+            format: L("app.legacyApp.removed.message"),
+            result.removed.joined(separator: " / ")
+        )
+        alert.addButton(withTitle: L("app.legacyApp.ok"))
+        NSApp.activate(ignoringOtherApps: true)
+        alert.runModal()
+    }
+
+    /// 本版本是否已忽略过旧版本清理失败的提示
+    private var hasDismissedLegacyCleanupAlert: Bool {
+        guard let version = Bundle.main.infoDictionary?["CFBundleVersion"] as? String else { return false }
+        return UserDefaults.standard.string(forKey: Self.legacyCleanupDismissedVersionKey) == version
     }
 
     // MARK: - 动态激活策略

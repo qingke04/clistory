@@ -2,7 +2,7 @@
   <img src="docs/images/app-icon.png" width="128" height="128" alt="Clistory（历史粘贴板）应用图标">
 </p>
 
-# Clistory（历史粘贴板）
+# 历史粘贴板
 
 *Clipboard History for macOS · 英文名 Clistory · 中文名 历史粘贴板*
 
@@ -10,7 +10,7 @@
 
 ![macOS 14+](https://img.shields.io/badge/macOS-14%2B-blue?logo=apple&logoColor=white) ![Swift 5.9+](https://img.shields.io/badge/Swift-5.9%2B-orange?logo=swift&logoColor=white) [![License: MIT](https://img.shields.io/badge/License-MIT-green)](LICENSE) [![GitHub release](https://img.shields.io/github/v/release/qingke04/clistory?label=release&logo=github)](https://github.com/qingke04/clistory/releases/latest)
 
-Clistory（中文名「历史粘贴板」）是一款 macOS 原生剪贴板历史管理工具：自动记录复制的文字与文件路径，支持搜索、置顶、回填和自动清理。应用常驻菜单栏，也可打开独立主窗口进行完整管理；界面支持跟随系统（Follow System）、简体中文与 English。当前版本 **1.1（Build 2）**。
+Clistory（中文名「历史粘贴板」）是一款 macOS 原生剪贴板历史管理工具：自动记录复制的文字与文件路径，支持搜索、置顶、回填和自动清理。应用常驻菜单栏，也可打开独立主窗口进行完整管理；界面支持跟随系统（Follow System）、简体中文与 English。当前版本 **1.1.1（Build 3）**。
 
 ## 功能特性
 
@@ -65,7 +65,7 @@ brew uninstall --zap --cask qingke04/tap/clistory
 
 从 [Releases](https://github.com/qingke04/clistory/releases/latest) 下载最新安装包：
 
-1. 下载 `Clistory-1.1.dmg` 并双击挂载。
+1. 下载 `Clistory-1.1.1.dmg` 并双击挂载。
 2. 将 `Clistory.app` 拖入「应用程序」文件夹（中文系统下在访达中显示为「历史粘贴板」）。
 3. 首次启动时，由于发布包使用 ad-hoc 签名且未经过 Apple 公证，Gatekeeper 可能提示无法验证开发者。请在「访达」中右键点击应用并选择「打开」，或前往「系统设置 → 隐私与安全性」点击「仍要打开」；放行一次后即可正常启动。
 
@@ -74,17 +74,18 @@ brew uninstall --zap --cask qingke04/tap/clistory
 可选：校验安装包完整性。
 
 ```bash
-shasum -a 256 Clistory-1.1.dmg
+shasum -a 256 Clistory-1.1.1.dmg
 # 将输出与对应 Release 说明中公布的 SHA-256 值比对
 ```
 
 ### 从 1.0.0 升级
 
-1.1 起应用英文名改为 Clistory，安装包文件名由 `历史粘贴板.app` 变为 `Clistory.app`，因此升级后「应用程序」文件夹中可能同时存在旧版与新版本。升级请按以下步骤操作：
+1.1 起应用英文名改为 Clistory，安装包文件名由 `历史粘贴板.app` 变为 `Clistory.app`。由于 Bundle ID 不变、只是包名不同，拖拽安装不会覆盖旧版，升级后「应用程序」文件夹中可能出现新旧两个 `.app`（中文系统下 Finder 会把两者都显示为「历史粘贴板」）。**从 1.1.1 起，新版首次启动会自动检测并清理旧版本，无需手动删除**：
 
-1. 安装新版本后，先运行一次 `Clistory.app`。
-2. 打开「应用程序」文件夹，手动删除旧版本「历史粘贴板.app」。
-3. 打开新版「设置 → 启动」，重新开启一次「开机自动启动」（关闭后再打开，使自启动指向新版本）。
+1. 安装新版本后启动 `Clistory.app`；如果旧版本正在运行也没关系，新版会退出旧实例并自动清理旧包，避免两个实例同时写历史记录。
+2. 首次启动若检测到旧版本「历史粘贴板.app」，会自动将它移到废纸篓（可恢复）并弹窗提示；旧版本进程若仍在运行也会被正常退出，避免两个实例同时写历史记录。
+3. 新版会尝试自动把「开机自动启动」重新注册到新版本；如发现未生效，到「设置 → 启动」开关一次即可。
+4. 若提示「无法自动移除旧版本应用」，通常是 macOS 的「App 管理」隐私保护拦截：按提示在「系统设置 → 隐私与安全性 → App 管理」中允许 Clistory 后点「重试」，或打开「应用程序」文件夹手动把「历史粘贴板.app」拖到废纸篓。
 
 > 两个版本使用相同的 Bundle ID（`com.clipboardmanager.app`）与数据目录，历史记录不会丢失，无需迁移。
 
@@ -182,7 +183,7 @@ xcodebuild \
   archive
 ```
 
-归档产物位于 `build/Clistory.xcarchive/Products/Applications/Clistory.app`，可继续用于打包 DMG，建议产物名为 `build/Clistory-1.1.dmg`。
+归档产物位于 `build/Clistory.xcarchive/Products/Applications/Clistory.app`，可继续用于打包 DMG，建议产物名为 `build/Clistory-1.1.1.dmg`。
 
 ## 项目结构
 
@@ -232,6 +233,7 @@ xcodebuild \
 - **不记录剪贴板图片数据**：截图等纯图片内容不会进入历史，这是当前版本的产品决策。
 - **无路径隐私过滤**：文件记录保留完整路径，暂不提供脱敏或黑名单。
 - **不支持云同步与富文本格式**：历史仅保存在本机；富文本只保留纯文本。
+- **旧版本清理权限**：macOS 13+ 的「App 管理」隐私保护可能拦截自动清理旧版本；应用会提示授权或手动移入废纸篓。
 
 ## 许可证
 

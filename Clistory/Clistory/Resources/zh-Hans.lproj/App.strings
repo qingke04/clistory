@@ -2,3 +2,13 @@
 
 /* 应用显示名（与 InfoPlist.strings 保持一致） */
 "app.name" = "历史粘贴板";
+
+/* 旧版本应用清理（0.x 的「历史粘贴板.app」→ 1.x 的「Clistory.app」更名迁移） */
+"app.legacyApp.removed.title" = "已清理旧版本应用";
+"app.legacyApp.removed.message" = "为避免新旧版本同时存在，已将旧版本「%@」移到废纸篓。你的历史记录不受影响。";
+"app.legacyApp.failed.title" = "无法自动移除旧版本应用";
+"app.legacyApp.failed.message" = "旧版本「%@」仍与新版本同时存在于「应用程序」文件夹中。自动移除失败，可能是 macOS 的权限保护所致：可以在「系统设置 → 隐私与安全性 → App 管理」中允许 Clistory 后点「重试」，也可以在「访达」中手动将它移到废纸篓。";
+"app.legacyApp.retry" = "重试";
+"app.legacyApp.reveal" = "在访达中显示";
+"app.legacyApp.later" = "稍后";
+"app.legacyApp.ok" = "好";

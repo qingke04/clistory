@@ -10,7 +10,7 @@
 
 ![macOS 14+](https://img.shields.io/badge/macOS-14%2B-blue?logo=apple&logoColor=white) ![Swift 5.9+](https://img.shields.io/badge/Swift-5.9%2B-orange?logo=swift&logoColor=white) [![License: MIT](https://img.shields.io/badge/License-MIT-green)](LICENSE) [![GitHub release](https://img.shields.io/github/v/release/qingke04/clistory?label=release&logo=github)](https://github.com/qingke04/clistory/releases/latest)
 
-**Clip Once. Paste Anytime.** Clistory is a native macOS clipboard history manager that automatically records copied text and file paths, with search, pinning, paste-back and automatic cleanup. It lives in the menu bar and can also open a standalone window for full management. The interface supports Follow System, Simplified Chinese and English. Current version: **1.1 (Build 2)**.
+**Clip Once. Paste Anytime.** Clistory is a native macOS clipboard history manager that automatically records copied text and file paths, with search, pinning, paste-back and automatic cleanup. It lives in the menu bar and can also open a standalone window for full management. The interface supports Follow System, Simplified Chinese and English. Current version: **1.1.1 (Build 3)**.
 
 ## Features
 
@@ -65,7 +65,7 @@ brew uninstall --zap --cask qingke04/tap/clistory
 
 Download the latest installer from [Releases](https://github.com/qingke04/clistory/releases/latest):
 
-1. Download `Clistory-1.1.dmg` and double-click to mount it.
+1. Download `Clistory-1.1.1.dmg` and double-click to mount it.
 2. Drag `Clistory.app` into the Applications folder (on a Chinese system it appears as 「历史粘贴板」 in Finder).
 3. On first launch, because release builds are ad-hoc signed and not notarized by Apple, Gatekeeper may warn that the developer cannot be verified. Right-click the app in Finder and choose Open, or go to System Settings → Privacy & Security and click Open Anyway. After allowing it once, the app launches normally.
 
@@ -74,17 +74,18 @@ Download the latest installer from [Releases](https://github.com/qingke04/clisto
 Optionally verify the integrity of the installer:
 
 ```bash
-shasum -a 256 Clistory-1.1.dmg
+shasum -a 256 Clistory-1.1.1.dmg
 # Compare the output with the SHA-256 value published in the corresponding Release notes
 ```
 
 ### Upgrading from 1.0.0
 
-Starting with 1.1, the English app name is Clistory and the bundle file name changed from `历史粘贴板.app` to `Clistory.app`. After upgrading, both versions may coexist in the Applications folder. Please follow these steps:
+Starting with 1.1, the English app name is Clistory and the bundle file name changed from `历史粘贴板.app` to `Clistory.app`. Because the Bundle ID is unchanged and only the bundle name differs, dragging the new version in does not replace the old one, so both `.app` files may end up in the Applications folder (on a Chinese system, Finder displays both as 「历史粘贴板」). **Starting with 1.1.1, the new version detects and removes the old version automatically on first launch — no manual deletion needed:**
 
-1. Install the new version and launch `Clistory.app` once.
-2. Open the Applications folder and manually delete the old 「历史粘贴板.app」.
-3. Open Settings → Launch in the new version and re-enable Launch at Login (turn it off and on again so it points to the new version).
+1. Install the new version and launch `Clistory.app`. If the old version is still running, that is fine — the new version quits the old instance and removes the old bundle, so the two never write the clipboard history at the same time.
+2. On first launch, if the old 「历史粘贴板.app」 is found, it is moved to the Trash (recoverable) and you are notified. A still-running old instance is also quit first, so two instances never write the clipboard history at the same time.
+3. The new version tries to re-register Launch at Login for itself; if it doesn't take effect, toggle it once under Settings → Launch.
+4. If you see “Couldn’t Remove Old Version”, macOS App Management privacy protection may be blocking it: allow Clistory in System Settings → Privacy & Security → App Management and click Try Again, or move 「历史粘贴板.app」 to the Trash manually in Finder.
 
 > Both versions share the same Bundle ID (`com.clipboardmanager.app`) and data directory, so your history is preserved and no migration is needed.
 
@@ -182,7 +183,7 @@ xcodebuild \
   archive
 ```
 
-The archived product is located at `build/Clistory.xcarchive/Products/Applications/Clistory.app` and can be used to package the DMG; the suggested artifact name is `build/Clistory-1.1.dmg`.
+The archived product is located at `build/Clistory.xcarchive/Products/Applications/Clistory.app` and can be used to package the DMG; the suggested artifact name is `build/Clistory-1.1.1.dmg`.
 
 ## Project structure
 
@@ -233,6 +234,7 @@ The archived product is located at `build/Clistory.xcarchive/Products/Applicatio
 - **No clipboard image data**: Pure images such as screenshots are not added to history; this is a product decision for the current version.
 - **No path privacy filter**: File entries keep full paths; masking or blacklists are not provided yet.
 - **No cloud sync or rich-text formatting**: History stays on your Mac; rich text is reduced to plain text.
+- **Old-version cleanup permissions**: macOS 13+ App Management privacy protection may block automatic removal of the old version; the app offers permission guidance or manual removal.
 
 ## License
 

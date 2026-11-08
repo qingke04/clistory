@@ -4,8 +4,9 @@
 macOS 原生历史剪贴板管理软件（英文名 **Clistory**，中文名 **历史粘贴板**，应用内名称按语言本地化）。记录文字和文件路径的复制历史，支持搜索、置顶、删除、自动清理。
 提供菜单栏面板 + 独立桌面窗口两种交互方式。
 
-- **当前版本**：1.1（Build 2）
+- **当前版本**：1.1.1（Build 3）
 - **Bundle ID**：`com.clipboardmanager.app`（保持不变；用户数据目录仍为 `~/Library/Application Support/ClipboardManager/`）
+- **升级迁移**：更名后首次启动自动检测旧版本「历史粘贴板.app」并移入废纸篓，避免两个 `.app` 共存（`Services/LegacyAppCleaner.swift`）
 
 ## 技术栈
 - **语言**：Swift 5.9+
@@ -58,7 +59,7 @@ macOS 原生历史剪贴板管理软件（英文名 **Clistory**，中文名 **�
 │   ├── TODO.md
 │   └── completed/
 │       ├── execution-plan.md        # 分阶段执行计划（已归档）
-│       └── phase-01 ~ phase-11  # 阶段完成记录
+│       └── phase-01 ~ phase-12  # 阶段完成记录
 └── Clistory/                        # Xcode 项目
     ├── Clistory.xcodeproj/
     └── Clistory/
@@ -68,17 +69,17 @@ macOS 原生历史剪贴板管理软件（英文名 **Clistory**，中文名 **�
         ├── AppIcon.icon/
         ├── App/                     # AppDelegate 系统集成
         ├── Core/                    # 数据模型、存储、监听、快捷键、语言管理
-        ├── Services/                # ClipboardActions、AppWindows
+        ├── Services/                # ClipboardActions、AppWindows、LegacyAppCleaner
         ├── Resources/               # en.lproj / zh-Hans.lproj 本地化字符串
         └── UI/                      # SwiftUI 界面 + Components
 ```
 
 ## 版本管理
 
-- 当前版本：**1.1（Build 2）**，不再维护历史版本号与版本更新日志
+- 当前版本：**1.1.1（Build 3）**，不再维护历史版本号与版本更新日志
 - 版本号唯一来源：`Clistory/Clistory.xcodeproj/project.pbxproj`
-  - `MARKETING_VERSION` = `1.1`
-  - `CURRENT_PROJECT_VERSION` = `2`
+  - `MARKETING_VERSION` = `1.1.1`
+  - `CURRENT_PROJECT_VERSION` = `3`
 - `Info.plist` 通过 `$(MARKETING_VERSION)` / `$(CURRENT_PROJECT_VERSION)` 引用上述配置，无需单独修改
 
 ## 快速命令参考
@@ -94,5 +95,5 @@ macOS 原生历史剪贴板管理软件（英文名 **Clistory**，中文名 **�
   ```bash
   xcodebuild -project Clistory/Clistory.xcodeproj -scheme Clistory -configuration Release -archivePath build/Clistory.xcarchive archive
   ```
-  - 归档产物：`build/Clistory.xcarchive/Products/Applications/Clistory.app`；DMG 建议 `build/Clistory-1.1.dmg`
+  - 归档产物：`build/Clistory.xcarchive/Products/Applications/Clistory.app`；DMG 建议 `build/Clistory-1.1.1.dmg`
 - 若 `xcodebuild` 报 requires Xcode（本机 active developer directory 为 CommandLineTools）：命令前加 `DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer`

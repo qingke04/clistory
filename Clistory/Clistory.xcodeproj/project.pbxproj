@@ -32,6 +32,7 @@
 		A10000000000000000000035 /* Components.strings in Resources */ = {isa = PBXBuildFile; fileRef = A30000000000000000000035 /* Components.strings */; };
 		A10000000000000000000036 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = A30000000000000000000036 /* InfoPlist.strings */; };
 		A10000000000000000000037 /* LanguageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000044 /* LanguageManager.swift */; };
+		A10000000000000000000038 /* LegacyAppCleaner.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000045 /* LegacyAppCleaner.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -69,6 +70,7 @@
 		A20000000000000000000042 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		A20000000000000000000043 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		A20000000000000000000044 /* LanguageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageManager.swift; sourceTree = "<group>"; };
+		A20000000000000000000045 /* LegacyAppCleaner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LegacyAppCleaner.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -150,6 +152,7 @@
 			children = (
 				A20000000000000000000019 /* ClipboardActions.swift */,
 				A20000000000000000000020 /* AppWindows.swift */,
+				A20000000000000000000045 /* LegacyAppCleaner.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -266,6 +269,7 @@
 				A10000000000000000000017 /* ClipboardActions.swift in Sources */,
 				A10000000000000000000018 /* AppWindows.swift in Sources */,
 				A10000000000000000000037 /* LanguageManager.swift in Sources */,
+				A10000000000000000000038 /* LegacyAppCleaner.swift in Sources */,
 				A10000000000000000000012 /* MenuBarPanelView.swift in Sources */,
 				A10000000000000000000013 /* MainContentView.swift in Sources */,
 				A10000000000000000000010 /* SettingsView.swift in Sources */,
@@ -461,7 +465,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				DEAD_CODE_STRIPPING = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -472,7 +476,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.clipboardmanager.app;
 				PRODUCT_NAME = Clistory;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -485,7 +489,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				DEAD_CODE_STRIPPING = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -496,7 +500,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.clipboardmanager.app;
 				PRODUCT_NAME = Clistory;
 				SWIFT_EMIT_LOC_STRINGS = YES;
