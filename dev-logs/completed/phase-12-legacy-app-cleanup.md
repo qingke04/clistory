@@ -58,6 +58,7 @@ DMG 采用拖拽安装：包文件名不同就不会覆盖，于是从 1.0.x 升
 - **DMG**：`build/Clistory-1.1.1.dmg`（2.6 MB），`hdiutil verify` 校验 VALID；挂载后包内版本为 1.1.1（Build 3），含新文案，通用架构；SHA-256 `d98b0c2e341bc4c675a0237c719a9b9ccdad37b9fa5906a8a12a15f226509885`
 - **GitHub 发布**：提交 `ca2bdfc` 推送 `main`；tag `v1.1.1` 与 Release「Clistory v1.1.1」创建成功，说明为「修复更新后新版与旧版共存的问题」；通过 Release 下载回验，DMG 大小 2,710,159 字节、SHA-256 与本地一致
 - **Homebrew**：tap 提交 `0ad608d` 将 `Casks/clistory.rb` 更新为 1.1.1（新 SHA-256），`brew fetch --cask qingke04/tap/clistory` 校验通过
+- **升级实测**：在安装 1.1 的机器上执行 `brew upgrade --cask qingke04/tap/clistory`，成功升级到 1.1.1（Build 3），`/Applications/Clistory.app` 版本校验为 1.1.1，应用启动正常
 
 ## 注意事项
 

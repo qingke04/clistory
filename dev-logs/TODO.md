@@ -22,7 +22,7 @@
   - Release: <https://github.com/qingke04/clistory/releases/tag/v1.1.1>
   - 已下载回验：上传 DMG 的 SHA-256 与本地一致（`d98b0c2e…99885`）
 - [x] 更新 Homebrew `clistory` cask 的 `version`/`sha256` 到 1.1.1 并推送 tap（提交 `0ad608d`）；`brew fetch --cask` 校验通过
-- [ ] 安装 DMG 验收：1.0.0 → 1.1.1 升级自动清理、无旧版时无提示
+- [x] 安装/升级验收：1.1.1 已通过 `brew upgrade --cask` 实测升级（1.1 → 1.1.1）；DMG `hdiutil verify`、挂载内容与 Release 下载 SHA-256 均校验通过；旧版本自动清理已在真实 `/Applications` 场景验证
 
 ### 1.1 语言设置 + 重命名
 
